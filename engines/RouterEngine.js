@@ -172,15 +172,21 @@ let RouterEngine = {
 
         for (let i = 0; i < routes.length; i++) {
             let route = routes[i]['data'];
-
+            let nameWasGenerated = false;
 
 
             if (!route.children && parent.useMethodAsName && !route.name) {
                 route.name = route.controller;
+                nameWasGenerated = true;
             }
 
             if (parent.as && typeof route.name === 'string' && route.name.substr(0, 1) !== '/') {
-                route.name = parent.as + '.' + route.name
+                if (route.path === '' && nameWasGenerated) {
+                    route.name = parent.as
+                } else {
+                    route.name = parent.as + '.' + route.name
+                }
+
             }
 
             if (route.name) {
