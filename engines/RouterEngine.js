@@ -196,10 +196,9 @@ let RouterEngine = {
                 route.name = route.name.toLowerCase();
             }
 
-            if (parent.controller && route.controller && !route.controller.includes('@')) {
+            if (!route.children && parent.controller && route.controller && !route.controller.includes('@')) {
                 route.controller = parent.controller + '@' + route.controller
             }
-
 
             if (parent.path) {
 
