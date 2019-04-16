@@ -18,7 +18,7 @@ let RouterEngine = {
         let thisRoutes = [];
 
         AllRoutes = [];
-        routes();
+        routes(Router);
         thisRoutes = _.clone(AllRoutes);
         AllRoutes = oldRoutes;
 
