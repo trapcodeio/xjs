@@ -226,9 +226,6 @@ if (!$.isConsole) {
         tablename: "sessions"
     });
 
-    // Assign Functions to $.fn
-    $.fn = require("./functions/x.fn.js");
-
     app.use(cors());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({

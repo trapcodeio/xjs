@@ -11,3 +11,6 @@ if ($.config.database.startOnBoot) {
 
 $.bcrypt = require('bcrypt');
 $.helpers = require('./helpers.js');
+
+// Assign Functions to $.fn
+$.fn = require("./functions/x.fn.js");
