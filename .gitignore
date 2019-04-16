@@ -1,0 +1,8 @@
+.idea
+node_modules/*
+
+.env
+*.sqlite
+*.log
+.vscode
+/engines/database/tinker.json

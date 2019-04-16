@@ -1,0 +1,24 @@
+require('dotenv').config();
+
+let migrations = {
+    tableName: 'migrations'
+};
+
+let dbConnection = {
+    client: process.env.DATABASE_CLIENT,
+    connection: {
+        host: process.env.DATABASE_HOST,
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME
+    },
+    migrations
+};
+
+module.exports = {
+    development: dbConnection,
+
+    staging: dbConnection,
+
+    production: dbConnection
+};
