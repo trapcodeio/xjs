@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://trapcodeio@bitbucket.org/trapcodeio/xjs.git"
+    "url": "git+https://github.com/trapcodeio/xjs.git"
   },
   "author": "trapcode",
   "license": "MIT",
@@ -54,11 +54,12 @@
     "nodemon": "^1.18.10",
     "vue-template-compiler": "^2.6.10"
   },
-  "homepage": "https://bitbucket.org/trapcodeio/xjs#readme",
+  "homepage": "https://github.com/trapcodeio/xjs#readme",
   "keywords": [
     "xjs",
     "framework",
     "mvc",
-    "nodejs."
+    "nodejs",
+    "express-framework"
   ]
 }
