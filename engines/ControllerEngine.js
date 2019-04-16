@@ -12,10 +12,6 @@ class ControllerEngine {
      * @param {string} method
      */
     constructor(controller, method) {
-        if (typeof controller !== 'function') {
-            $.log('Controller not found!');
-            process.exit();
-        }
         return this.processController(controller, method);
     }
 
@@ -109,9 +105,11 @@ ControllerEngine.prototype.controller = function () {
  */
 let controller = function (controller, method = null) {
     let route = undefined;
+    let controllerPath = null;
     if (typeof controller === 'object' && controller.hasOwnProperty('controller')) {
         route = controller;
         controller = controller.controller;
+
     }
 
     if (typeof controller === 'string' && controller.includes('@')) {
@@ -120,9 +118,17 @@ let controller = function (controller, method = null) {
         method = split[1];
 
 
-        let controllerPath = $.backendPath('controllers/' + controller + '.js');
+        controllerPath = $.backendPath('controllers/' + controller + '.js');
 
         controller = require(controllerPath);
+    }
+
+    if (typeof controller !== 'function') {
+        if(typeof  controller === 'string'){
+            return $.logErrorAndExit("Controller: {"+controller+"} not found!");
+        }
+        return $.logErrorAndExit('Controller not found!');
+        // process.exit();
     }
 
     if (route !== undefined && typeof controller.middleware === 'function') {

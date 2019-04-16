@@ -22,9 +22,11 @@ let RouterEngine = {
         thisRoutes = _.clone(AllRoutes);
         AllRoutes = oldRoutes;
 
-        let eachRoute = new Route('children', path, thisRoutes);
-        AllRoutes.push(eachRoute);
-        return eachRoute;
+        if (thisRoutes.length) {
+            let eachRoute = new Route('children', path, thisRoutes);
+            AllRoutes.push(eachRoute);
+            return eachRoute;
+        }
     },
 
     /**
@@ -122,7 +124,7 @@ let RouterEngine = {
         return NameToRoute;
     },
 
-    nameToPath: function () {
+    nameToPath: function (returnKey = 'path') {
         let localVariableName = 'RouterEngine:nameToPath';
 
         if ($.engineData.has(localVariableName)) {
@@ -134,8 +136,10 @@ let RouterEngine = {
 
         for (let i = 0; i < names.length; i++) {
             const name = names[i];
-            newRoutes[name] = NameToRoute[name].path;
+            newRoutes[name] = NameToRoute[name][returnKey];
         }
+
+        if (returnKey !== 'path') return newRoutes;
 
         $.engineData.set(localVariableName, newRoutes);
         return newRoutes;
@@ -169,24 +173,31 @@ let RouterEngine = {
         for (let i = 0; i < routes.length; i++) {
             let route = routes[i]['data'];
 
-            if (parent.useMethodAsName && !route.name) {
+
+
+            if (!route.children && parent.useMethodAsName && !route.name) {
                 route.name = route.controller;
             }
 
-            if (parent.as) {
+            if (parent.as && typeof route.name === 'string' && route.name.substr(0, 1) !== '/') {
                 route.name = parent.as + '.' + route.name
             }
 
             if (route.name) {
+                if (route.name.substr(0, 1) === '/') {
+                    route.name = route.name.substr(1);
+                }
                 route.name = route.name.toLowerCase();
             }
 
-            if (parent.controller && !route.controller.includes('@')) {
+            if (parent.controller && route.controller && !route.controller.includes('@')) {
                 route.controller = parent.controller + '@' + route.controller
             }
 
+
             if (parent.path) {
-                if (parent.path !== '/' && route.path.substr(0, 1) !== '/') {
+
+                if (route.path.length && parent.path.substr(-1) !== '/' && route.path.substr(0, 1) !== '/') {
                     route.path = '/' + route.path;
                 }
 
@@ -222,7 +233,8 @@ let RouterEngine = {
                 route.controller = controller + '@' + method;
             }
 
-            if (typeof route.children !== 'undefined' && Array.isArray(route.children)) {
+
+            if (typeof route.children !== 'undefined' && Array.isArray(route.children) && route.children.length) {
                 this.processRoutes(route.children, route);
             } else {
                 if (Router && (!$.isTinker && !$.isConsole)) {
