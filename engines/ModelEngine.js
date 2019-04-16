@@ -1,26 +1,34 @@
 // @ts-check
-const {
-    Model
-} = require('objection');
+const {Model} = require('objection');
 
 if ($.config.database.startOnBoot) {
     Model.knex($.db.knex);
 }
 
+// A few helpers
 /**
- * @class ModelEngine
- * @member {string[]} $hidden
- * @extends Model
+ * ShortHand to get required model.
+ * @param {string} path
+ * @returns {Model}
  */
-class ModelEngine extends Model {
-    /**
-     * @param {*} json
-     */
-    $formatJson(json) {
-        json = super.$formatJson(json);
-        return _.omit(json, this.$hidden);
-    }
-}
+$.requireModel = function (path) {
+    path = _.upperFirst(path);
+    return $.backendPath("models/" + path, true);
+};
 
-ModelEngine.prototype.$hidden = [];
-module.exports = ModelEngine;
+/**
+ * Get Model Query
+ * @param model
+ * @returns {QueryBuilder}
+ */
+$.getModelQuery = (model) => {
+    return $.requireModel(model).query();
+};
+
+Model.prototype.$formatJson = function(json) {
+    return _.omit(json, this.$hidden);
+};
+
+Model.prototype.$hidden = [];
+
+module.exports = Model;

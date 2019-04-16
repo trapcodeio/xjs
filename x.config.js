@@ -4,7 +4,7 @@ module.exports = {
     name: 'Xjs',
     env: 'development',
     database: {
-        startOnBoot: false
+        startOnBoot: true
     },
     server: {
         port: process.env.APP_PORT,

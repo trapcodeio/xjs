@@ -271,17 +271,8 @@ if (!$.isConsole) {
         $.controller = require("./classes/Controller.js");
     }
 
-    // Require Models
+    // Require Model Engine
     $.model = require("./ModelEngine.js");
-
-    /**
-     * ShortHand to get required model.
-     * @param {string} path
-     */
-    $.requireModel = function (path) {
-        path = _.upperFirst(path);
-        return $.backendPath("models/" + path, true);
-    };
 
     /**
      * Include xjs/cycles/beforeRoutes.js if exists
