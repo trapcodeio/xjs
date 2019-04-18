@@ -2,10 +2,12 @@ const fs = require('fs');
 const fse = require('fs-extra');
 const path = require('path');
 const _extend = require('lodash/extend');
+const shellJs = require('shelljs');
 
 const xjsPath = path.resolve(__dirname);
 
 const excludes = [
+    'database.sqlite',
     'engines',
     'node_modules',
     'package.json',
@@ -70,6 +72,8 @@ module.exports = function (installationPath, config) {
 
         }
     }
+
+    shellJs.exec('yarn add dotenv');
 
     if (deleteFiles.length) {
         for (let i = 0; i < deleteFiles.length; i++) {

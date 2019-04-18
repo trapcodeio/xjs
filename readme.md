@@ -1,7 +1,19 @@
 #### Xjs Framework (Beta)
 ###### Still in production
 
-No Docs Yet!
+A powerful framework for nodejs, Using `expressjs` as a server and also other community proven worthy libraries.
+
+
+### What you get
+1. Complete MVC structure
+2. User Authentication
+3. Nested Routing
+4. Named Routes
+5. A tinker (beta)
+6. Webpack ready using `laravel-mix`
+7. All database supported by `KnexJs` e.g **Postgres**, **MSSQL**, **MySQL**, **MariaDB**, **SQLite3**, **Oracle**, and **Amazon Redshift**
+8. Custom console commands
+9. _So much more!!!_
 
 ### Installation
 Installing Xjs Framework for now you have to use these steps.
@@ -39,16 +51,72 @@ You see this in your console.
 You now have **Xjs** installed.
 
 #### What Next?
-You need to install a few things.
-
-1. Install `knexJs` needed for database migrations 
-2. `npm install knex -g`
-3. Install `dotenv` needed to read your .env files.
-4. `yarn add dotenv`
+Rename `env.example` to `.env`
 
 
-Now you need to do a few things.
-1. rename `env.example` to `.env`
-2. Please fill in a valid database, for now we need database to load up.
+You need to install `knexJs` needed for database migrations
+```
+npm install knex -g
+```
+
+Open your console and run database migration
+```
+knex migrate:latest
+```
+
+You should see
+
+```
+Using environment: development
+Batch 1 run: 1 migrations 
+20190208064039_create_user_table.js
+```
+
+That's all! We are now ready to start our app with
+```
+node server.js
+
+// Or using Nodemon
+
+nodemon server.js
+```
+
+#### Hurray!
+```
+===>  Starting Xjs...
+===>  Server started and available on http://localhost:2000/
+===>  PORT:2000
+```
+
+You get a login and register function on default.
+
+### CLI Commands.
+Yes we support cli-commands to make things easy for you.
+
+#### Make Controller
+```console
+node xjs make:controller {name}
+```
+
+#### Make Model
+```console
+node xjs make:model {name} {tableName?}
+```
+
+### Make View
+```console
+node xjs make:view {path}
+```
+
+### Make Job
+```console
+node xjs make:job {path} {callCommand?}
+```
 
 
+This is all we have for now..
+
+### XJS STATUS
+Used in over 15 projects and works perfectly fine.
+
+If you use xjs, please let us know how you found it.
