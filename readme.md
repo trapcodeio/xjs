@@ -1,5 +1,4 @@
-#### Xjs Framework (Beta)
-###### Still in production
+## Xjs Framework (Beta)
 
 A powerful framework for nodejs, Using `expressjs` as a server and also other community proven worthy libraries.
 
@@ -38,8 +37,11 @@ const installXjs = require('@trapcode/xjs/install');
 // Run Installation
 installXjs(__filename);
 ```
-
-You see this in your console.
+Now run
+```
+node install.js
+```
+You should see this in your console.
 ```
 ===> Started Installation!
 ===> Moving files to /your/path/to/xjs-app
@@ -53,31 +55,32 @@ You now have **Xjs** installed.
 #### What Next?
 Rename `env.example` to `.env`
 
-
-You need to install `knexJs` needed for database migrations
+You need to install `knex` on your machine, needed for database migrations
 ```
 npm install knex -g
 ```
 
-Open your console and run database migration
+After installation, Open your console and run database migration
 ```
 knex migrate:latest
 ```
 
-You should see
+You should see in console
 
 ```
 Using environment: development
 Batch 1 run: 1 migrations 
 20190208064039_create_user_table.js
 ```
+We have just migrated our user database.
 
-That's all! We are now ready to start our app with
+That's all! 
+We are now ready to **start our App.**
 ```
+// Start Using
 node server.js
 
 // Or using Nodemon
-
 nodemon server.js
 ```
 
@@ -88,12 +91,11 @@ nodemon server.js
 ===>  PORT:2000
 ```
 
-You get a login and register function on default.
 
-### CLI Commands.
+## CLI Commands.
 Yes we support cli-commands to make things easy for you.
 
-#### Make Controller
+### Make Controller
 ```console
 node xjs make:controller {name}
 ```
