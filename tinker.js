@@ -1,3 +1,3 @@
-global['XjsConfig'] = require('./x.config');
+global['XjsConfig'] = require('./config');
 XjsConfig['isTinker'] = true;
 require('./engines/xTinker');

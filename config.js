@@ -4,7 +4,19 @@ module.exports = {
     name: 'Xjs',
     env: 'development',
     database: {
-        startOnBoot: true
+        // Start Database on boot!
+        startOnBoot: true,
+        // Config is for knex database connection
+        config: {
+            client: process.env.DATABASE_CLIENT,
+            connection: {
+                filename: process.env.DATABASE_FILE
+            },
+            migrations: {
+                tableName: 'migrations'
+            },
+            useNullAsDefault: true
+        }
     },
     server: {
         port: process.env.APP_PORT,

@@ -1,4 +1,4 @@
-const x = require('./x.config');
+const x = require('./config');
 const mix = require('laravel-mix');
 
 mix.setPublicPath(x.paths.base);

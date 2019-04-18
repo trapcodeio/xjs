@@ -1,5 +1,5 @@
 // Config Xjs
-let XjsConfig = require('./x.config');
+let XjsConfig = require('./config');
 // Require Xpresser
 global['XjsConfig'] = XjsConfig;
 require('./engines/console');
