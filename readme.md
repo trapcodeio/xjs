@@ -15,58 +15,23 @@ A powerful framework for nodejs, Using `expressjs` as a server and also other co
 9. _So much more!!!_
 
 ### Installation
-Installing Xjs Framework for now you have to use these steps.
-In future we will create a better way.
+Installing Xjs Framework requires [**Xjs CLI**](https://www.npmjs.com/package/xjs-cli)
 
-Note: For this docs we will be using **yarn**, you can also use npm.
-
-#### Step One
-Make your project folder e.g **xjs-app**
-1. Cd into **xjs-app**
-2. Run `yarn init`
-3. Run `yarn add @trapcode/xjs`
-
-Now you have **Xjs** in your project.
-lets get xjs to reveal all the files we need.
-
-Create a file named `install.js` or any name at all.
-Then put the following codes in it.
-```javascript
-const installXjs = require('@trapcode/xjs/install');
-
-// Run Installation
-installXjs(__filename);
-```
-Now run
-```
-node install.js
-```
-You should see this in your console.
-```
-===> Started Installation!
-===> Moving files to /your/path/to/xjs-app
-===> Installation Finished!
+#### Install Xjs-CLI
+```console
+npm install xjs-cli -g
 ```
 
+This installs `xjs-cli` globally so you can use the `xjs` command.
 
-##### YAAAYYYY!!!!!
-You now have **Xjs** installed.
+Run `xjs --help` after installation.
 
-#### What Next?
-Rename `env.example` to `.env`
-
-You need to install `knex` on your machine, needed for database migrations
-```
-npm install knex -g
+#### Create New Project
+```console
+xjs new my-xjs-app
 ```
 
-After installation, Open your console and run database migration
-```
-knex migrate:latest
-```
-
-You should see in console
-
+After that, you will be told to run `xjs migrate`  to migrate your database.
 ```
 Using environment: development
 Batch 1 run: 1 migrations 
@@ -77,11 +42,7 @@ We have just migrated our user database.
 That's all! 
 We are now ready to **start our App.**
 ```
-// Start Using
-node server.js
-
-// Or using Nodemon
-nodemon server.js
+xjs start
 ```
 
 #### Hurray!
@@ -92,33 +53,12 @@ nodemon server.js
 ```
 
 
-## CLI Commands.
-Yes we support cli-commands to make things easy for you.
-
-### Make Controller
+### More Commands?
 ```console
-node xjs make:controller {name}
+xjs --help
 ```
 
-#### Make Model
-```console
-node xjs make:model {name} {tableName?}
-```
+## XJS STATUS
+Used in over **15 Projects** and works **perfectly fine.**
 
-### Make View
-```console
-node xjs make:view {path}
-```
-
-### Make Job
-```console
-node xjs make:job {path} {callCommand?}
-```
-
-
-This is all we have for now..
-
-### XJS STATUS
-Used in over 15 projects and works perfectly fine.
-
-If you use xjs, please let us know how you found it.
+If you use xjs, please let us know how it has served you.

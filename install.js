@@ -43,9 +43,6 @@ module.exports = function (installationPath, config) {
         process.exit();
     }
 
-    console.log("===> Started Installation!");
-    console.log("===> Moving files to " + installationPath);
-
     let xjsFiles = fs.readdirSync(xjsPath);
     for (let i = 0; i < xjsFiles.length; i++) {
         let xjsFile = xjsFiles[i];
@@ -80,6 +77,4 @@ module.exports = function (installationPath, config) {
             }
         }
     }
-
-    console.log('===> Installation Finished!');
 };
