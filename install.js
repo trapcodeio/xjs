@@ -17,7 +17,7 @@ const excludes = [
 
 const hasEngines = [
     'server.js',
-    'xjs.js',
+    'cli.js',
     'tinker.js',
 ];
 
