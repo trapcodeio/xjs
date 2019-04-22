@@ -31,7 +31,7 @@ module.exports = {
     },
 
     isPromise($promise) {
-        return typeof $promise === 'object' && typeof $promise.then === 'function';
+        return $promise!== undefined && typeof $promise === 'object' && typeof $promise.then === 'function';
     },
 
     randomStr(length = 10) {

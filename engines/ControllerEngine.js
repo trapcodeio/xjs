@@ -38,14 +38,14 @@ class ControllerEngine {
 
                 if (typeof controller.boot === 'function') {
                     boot = controller.boot(x);
+                    if ($.fn.isPromise(boot)) {
+                        await boot;
+                    }
                 }
 
                 const $return = controller[method](x, boot);
-
-                if ($return !== undefined) {
-                    if ($.fn.isPromise($return)) {
-                        await $return;
-                    }
+                if ($.fn.isPromise($return)) {
+                    await $return;
                 }
             } catch (e) {
                 $.logError(e)
