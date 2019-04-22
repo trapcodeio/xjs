@@ -1,4 +1,5 @@
 const requestHelpers = require('./functions/request.fn.js');
+const ObjectCollection = require('./helpers/ObjectCollection');
 
 
 class RequestEngine {
@@ -17,6 +18,7 @@ class RequestEngine {
 
         this.session = req.session;
         this.bothData = this.all();
+        this.locals = new ObjectCollection(res.locals);
         this.fn = _.extend({}, $.helpers, requestHelpers(this));
     }
 
