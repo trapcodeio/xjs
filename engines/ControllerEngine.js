@@ -33,12 +33,15 @@ class ControllerEngine {
         return async function (req, res) {
             let x = new RequestEngine(req, res);
 
-            if (typeof controller.setRequestEngine === 'function') {
-                controller.setRequestEngine(x);
-            }
-
             try {
-                const $return = controller[method](x);
+                let boot = undefined;
+
+                if (typeof controller.boot === 'function') {
+                    boot = controller.boot(x);
+                }
+
+                const $return = controller[method](x, boot);
+
                 if ($return !== undefined) {
                     if ($.fn.isPromise($return)) {
                         await $return;
@@ -87,7 +90,7 @@ class ControllerEngine {
                 if (path.trim() === '/') {
                     path = new RegExp('^\/$');
                 }
-                
+
                 // @ts-ignore
                 $.app.use(path, MiddleWareEngine(middlewareFile[0], middlewareFile[1]));
             }
@@ -124,11 +127,10 @@ let controller = function (controller, method = null) {
     }
 
     if (typeof controller !== 'function') {
-        if(typeof  controller === 'string'){
-            return $.logErrorAndExit("Controller: {"+controller+"} not found!");
+        if (typeof controller === 'string') {
+            return $.logErrorAndExit("Controller: {" + controller + "} not found!");
         }
         return $.logErrorAndExit('Controller not found!');
-        // process.exit();
     }
 
     if (route !== undefined && typeof controller.middleware === 'function') {

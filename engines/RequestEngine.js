@@ -9,10 +9,12 @@ class RequestEngine {
      * @param {*} next
      */
     constructor(req, res, next = null) {
+        if (req.params) this.params = req.params;
         this.res = res;
         this.req = req;
 
         if (next !== null) this.next = next;
+
         this.session = req.session;
         this.bothData = this.all();
         this.fn = _.extend({}, $.helpers, requestHelpers(this));
@@ -46,7 +48,7 @@ class RequestEngine {
      * @param {array} keys
      * @param query
      */
-    route(route, keys = [], query={}) {
+    route(route, keys = [], query = {}) {
         return $.helpers.route(route, keys, query);
     }
 
@@ -244,6 +246,8 @@ class RequestEngine {
 RequestEngine.prototype.req = null;
 RequestEngine.prototype.res = null;
 RequestEngine.prototype.next = null;
+RequestEngine.prototype.params = {};
+
 RequestEngine.prototype.bothData = {};
 RequestEngine.prototype.session = {};
 RequestEngine.prototype.fn = {};
