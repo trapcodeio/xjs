@@ -39,7 +39,7 @@ class ControllerEngine {
                 if (typeof controller.boot === 'function') {
                     boot = controller.boot(x);
                     if ($.fn.isPromise(boot)) {
-                        await boot;
+                        boot = await boot;
                     }
                 }
 
