@@ -53,7 +53,7 @@ let helpers = {
             $query = {};
         }
 
-        if (typeof $keys === 'string') {
+        if (!Array.isArray($keys)) {
             $keys = [$keys];
         }
 
