@@ -66,7 +66,7 @@ let helpers = {
             let hasRegex = path.match(new RegExp('[|&;$%@"<>()+:,*]'));
             if (Array.isArray(hasRegex) && hasRegex.length) {
                 // find * and :keys
-                let findKeys = new RegExp('[*]|(:[a-zA-Z]+)', 'g');
+                let findKeys = new RegExp('[*]|(:[a-z_A-Z]+)', 'g');
                 let HasKeys = path.match(findKeys);
 
                 if (Array.isArray(HasKeys) && HasKeys.length) {

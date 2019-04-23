@@ -36,7 +36,15 @@ let xjsConfig = {
         engine: 'ejs',
         extension: 'ejs',
         // Relative to backend path
-        viewsFolder: 'views'
+        viewsFolder: 'views',
+
+        locals: {
+            all: true,
+            '__get': false,
+            '__post': false,
+            '__session': false,
+            '__stackedScripts': false
+        }
     },
     auth: {
         userModel: 'models/User',
