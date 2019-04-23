@@ -21,7 +21,7 @@ class AuthController extends $.controller {
         }
     }
 
-    async dashboard(x) {
+    dashboard(x) {
         if ($.config.auth.viewsFromEngine) {
             return x.renderViewFromEngine('dashboard');
         } else {
