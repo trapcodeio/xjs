@@ -1,5 +1,5 @@
 // @ts-check
-const {Model} = require('objection');
+const {Model, QueryBuilder} = require('objection');
 
 if ($.config.database.startOnBoot) {
     Model.knex($.db.knex);
@@ -25,10 +25,28 @@ $.getModelQuery = (model) => {
     return $.requireModel(model).query();
 };
 
-Model.prototype.$formatJson = function(json) {
-    return _.omit(json, this.$hidden);
-};
+class ModelQueryBuilder extends QueryBuilder {
+    /**
+     * CountRows
+     * @param count
+     * @return {Promise<number>}
+     */
+    async countRows(count='*') {
+        return (await this.count(count))[0][`count(${count})`];
+    }
+}
 
-Model.prototype.$hidden = [];
+class ModelEngine extends Model {
+    static get QueryBuilder() {
+        return ModelQueryBuilder;
+    }
 
-module.exports = Model;
+    $formatJson(json) {
+        return _.omit(json, this.$hidden);
+    };
+}
+
+
+ModelEngine.prototype.$hidden = [];
+
+module.exports = ModelEngine;
