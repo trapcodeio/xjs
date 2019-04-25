@@ -64,6 +64,7 @@ if (typeof commands[argCommand] === 'undefined') {
     } else {
         $.logAndExit('Command not found!')
     }
+
 } else {
     // Send only command args to function
     args.splice(0, 3);

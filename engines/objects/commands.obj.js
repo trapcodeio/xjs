@@ -18,7 +18,7 @@ $['console:commands'] = {
             return logThis('Job name not defined!');
         }
 
-        if(typeof command === 'undefined'){
+        if (typeof command === 'undefined') {
             command = job.trim();
         }
 
