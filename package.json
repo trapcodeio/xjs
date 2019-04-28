@@ -10,9 +10,7 @@
   "author": "trapcode",
   "license": "MIT",
   "scripts": {
-    "start": "node server",
-    "artisan": "node artisan",
-    "migrate": "knex migrate:latest",
+    "start": "node server.js",
     "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "prod": "npm run production",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
