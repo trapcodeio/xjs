@@ -1,10 +1,9 @@
 // @ts-check
 
 const express = require('express');
-const fs = require('fs');
-
 let RequestEngine = require('./RequestEngine.js');
 let MiddleWareEngine = require('./MiddlewareEngine');
+let ErrorEngine = require('./ErrorEngine');
 
 class ControllerEngine {
     /**
@@ -32,6 +31,7 @@ class ControllerEngine {
 
         return async function (req, res) {
             let x = new RequestEngine(req, res);
+            let error = new ErrorEngine(x);
 
             try {
                 let boot = undefined;
@@ -43,15 +43,32 @@ class ControllerEngine {
                     }
                 }
 
-                const $return = controller[method](x, boot);
-                if ($.fn.isPromise($return)) {
-                    await $return;
+                let controllerName = '';
+                if (typeof controllerName.constructor !== "undefined") {
+                    controllerName = controller.constructor.name;
+                }
+
+                try {
+                    if (typeof controller[method] !== 'function') {
+                        return error.controllerMethodNotFound('', method, controllerName)
+                    }
+
+                    const $return = controller[method](x, boot);
+
+                    if ($.fn.isPromise($return)) {
+                        await $return;
+                    }
+                } catch (e) {
+                    return error.view({
+                        error: {
+                            message: `Error in Controller:  <code>${controllerName}</code>, Method: <code>${method}</code>`,
+                            log: e.stack
+                        },
+                    })
                 }
             } catch (e) {
                 $.logError(e)
             }
-
-
         }
     }
 
@@ -75,14 +92,17 @@ class ControllerEngine {
                 middleware = oldMiddlewareMethod;
             }
 
-            if (middleware.includes('.')) {
-                let m = middleware.split('.');
-                m[0] = _.upperFirst(m[0]) + 'Middleware';
-                middlewareFile = m;
-            } else {
-                middleware = _.upperFirst(middleware) + 'Middleware';
-                middlewareFile = [middleware, 'allow'];
+            if (typeof middleware === 'string') {
+                if (middleware.includes('.')) {
+                    let m = middleware.split('.');
+                    m[0] = _.upperFirst(m[0]) + 'Middleware';
+                    middlewareFile = m;
+                } else {
+                    middleware = _.upperFirst(middleware) + 'Middleware';
+                    middlewareFile = [middleware, 'allow'];
+                }
             }
+
 
             if (middlewareMethod === '*' || middlewareMethod === method || (Array.isArray(middlewareMethod) && middlewareMethod.indexOf(method) >= 0)) {
                 let path = route.path;
@@ -92,7 +112,11 @@ class ControllerEngine {
                 }
 
                 // @ts-ignore
-                $.app.use(path, MiddleWareEngine(middlewareFile[0], middlewareFile[1]));
+                if (typeof middleware === "function") {
+                    $.app.use(path, middleware);
+                } else {
+                    $.app.use(path, MiddleWareEngine(middlewareFile[0], middlewareFile[1]));
+                }
             }
         }
     }

@@ -1,7 +1,8 @@
 const packageName = "@trapcode/xjs";
 
 global["$"] = {};
-global["_"] = require("lodash");
+let _ = require("lodash");
+global['_'] = _;
 global["moment"] = require("moment");
 
 // Add Re-usable packages
@@ -172,7 +173,6 @@ if (!$.isConsole) {
 
     app.use(function (req, res, next) {
         res.set("X-Powered-By", "Xjs");
-
         if ($.config.response.overrideServerName) res.set("Server", "Xjs");
         next();
     });
@@ -258,12 +258,12 @@ if (!$.isConsole) {
 
         if (x.isLogged()) {
             const user = await x.auth();
-            x.res.locals[$.config.auth.templateVariable] = user;
+            res.locals[$.config.auth.templateVariable] = user;
         } else {
-            x.res.locals[$.config.auth.templateVariable] = undefined;
+            res.locals[$.config.auth.templateVariable] = undefined;
         }
 
-        next();
+        next()
     });
 
     // Not Tinker? Require Controllers
@@ -289,6 +289,20 @@ if (!$.isConsole) {
     $.backendPath("routers/router", true);
     // Process Routes
     $.router.processRoutes();
+
+
+    app.use(function (req, res, next) {
+        let x = new RequestEngine(req, res, next);
+        let error = new (require('./ErrorEngine'))(x);
+        res.status(404);
+
+        // respond with json
+        if (req.xhr) {
+            return res.send({error: 'Not found'});
+        } else {
+            return error.pageNotFound(req);
+        }
+    });
 
 
     /**

@@ -22,7 +22,6 @@ class RequestEngine {
         this.fn = _.extend({}, $.helpers, requestHelpers(this));
     }
 
-
     async auth() {
         let x = this;
 
