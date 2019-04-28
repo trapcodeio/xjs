@@ -18,15 +18,7 @@ class MiddlewareEngine {
      */
     processMiddleware(middleware) {
         return async function (req, res, next) {
-            let middlewareReturns = middleware(new RequestResponseInterceptor(req, res, next));
-
-            if ($.fn.isPromise(middlewareReturns)) {
-                middlewareReturns = await middlewareReturns;
-            }
-
-            if (middlewareReturns === true) {
-                next();
-            }
+            middleware(new RequestResponseInterceptor(req, res, next));
         }
     }
 }

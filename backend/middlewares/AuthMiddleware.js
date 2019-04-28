@@ -7,11 +7,11 @@
 module.exports = {
     guest(x) {
         if (x.isLogged()) return x.redirectToRoute('dashboard');
-        return true;
+        x.next();
     },
 
     logged(x) {
         if (!x.isLogged()) return x.redirect('/');
-        return true;
+        x.next()
     },
 };
