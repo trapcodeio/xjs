@@ -7,7 +7,7 @@ class ObjectCollection {
     /**
      * @param {object} data
      */
-    constructor(data) {
+    constructor(data = {}) {
         this.___data = data;
         return this;
     }
@@ -15,7 +15,7 @@ class ObjectCollection {
     /**
      * Get path of object or return.
      * @method
-     * @param {string} path 
+     * @param {string} path
      * @param {*} $default
      * @return {*}
      */

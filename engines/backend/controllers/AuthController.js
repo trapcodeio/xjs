@@ -1,4 +1,4 @@
-const User = $.backendPath($.config.auth.userModel, true);
+const User = $.use.model($.config.auth.userModel);
 
 class AuthController extends $.controller {
 

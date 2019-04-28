@@ -47,7 +47,7 @@ let xjsConfig = {
         }
     },
     auth: {
-        userModel: 'models/User',
+        userModel: 'User',
         afterLoginRoute: 'dashboard',
         templateVariable: 'user',
         viewsFromEngine: true,

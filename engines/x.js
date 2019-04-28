@@ -141,6 +141,7 @@ if (typeof $.config.server === "undefined") {
  * @param {boolean} returnRequire
  */
 $.basePath = function (path = '', returnRequire = false) {
+    if (path[0] === '/') path = path.substr(1);
     const base = baseFiles + path;
     return returnRequire ? require(base) : base;
 };
@@ -149,7 +150,8 @@ $.basePath = function (path = '', returnRequire = false) {
  * @param {string} path
  * @param {boolean} returnRequire
  */
-$.backendPath = function (path = "", returnRequire = false) {
+$.backendPath = function (path = '', returnRequire = false) {
+    if (path[0] === '/') path = path.substr(1);
     const backend = backendFiles + path;
     return returnRequire ? require(backend) : backend;
 };
@@ -158,10 +160,13 @@ $.backendPath = function (path = "", returnRequire = false) {
  * @param {string} path
  * @param {boolean} returnRequire
  */
-$.engine = function (path = "", returnRequire = false) {
+$.engine = function (path = '', returnRequire = false) {
+    if (path[0] === '/') path = path.substr(1);
     const engine = EnginePath + path;
     return returnRequire ? require(engine) : engine;
 };
+
+$.engineData = new ObjectCollection();
 
 // Require global variables
 require("./global.js");
@@ -246,7 +251,6 @@ if (!$.isConsole) {
     app.locals["engineData"] = {};
 
     $.appData = new ObjectCollection(app.locals["appData"]);
-    $.engineData = new ObjectCollection(app.locals["engineData"]);
 
     $.app = app;
 
@@ -370,7 +374,4 @@ if (!$.isConsole) {
     $.router = require("./RouterEngine.js");
     $.backendPath("routers/router", true);
     $.router.processRoutes();
-
-    let engineData = {};
-    $.engineData = new ObjectCollection(engineData);
 }

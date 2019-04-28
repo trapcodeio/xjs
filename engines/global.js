@@ -1,4 +1,6 @@
 // ts-check
+$.use = require('./UseEngine');
+
 $.base64 = require('./helpers/Base64');
 $.ovp = require('./helpers/ObjectValidatorPro');
 

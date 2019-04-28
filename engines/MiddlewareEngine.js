@@ -36,16 +36,14 @@ class MiddlewareEngine {
  * @param {*} action
  */
 let middleware = function (middlewarePath, action = undefined) {
+    let middlewareFile = $.use.middleware(middlewarePath, false);
 
-    middlewarePath = $.backendPath('middlewares/' + middlewarePath + '.js');
-    if (!fs.existsSync(middlewarePath)) {
-        $.logErrorAndExit('File: ' + middlewarePath + ' not found!');
+    if (middlewareFile === false) {
+        return $.logErrorAndExit('Middleware: ' + middlewarePath + ' not found!');
     }
 
-    const middlewareFile = require(middlewarePath);
-
     if (typeof middlewareFile === 'object' && typeof middlewareFile[action] === 'undefined') {
-        $.logErrorAndExit('Method {' + action + '} not found in middleware: ' + middlewarePath);
+        return $.logErrorAndExit('Method {' + action + '} not found in middleware: ' + middlewarePath);
     }
 
     return new MiddlewareEngine(middlewareFile, action);

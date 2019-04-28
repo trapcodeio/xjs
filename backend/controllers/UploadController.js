@@ -1,3 +1,4 @@
+const Auth = $.use.middleware('Auth');
 /**
  * UploadController
  * @class
@@ -10,9 +11,7 @@ class UploadController extends $.controller {
      * @returns {Object}
      */
     static middleware() {
-        return {
-            // '@postUpload': UploadController.upload.single('image')
-        }
+        return {}
     }
 
 
