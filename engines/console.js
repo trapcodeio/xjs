@@ -52,6 +52,12 @@ const loadJobs = function (path) {
     }
 };
 
+class JobHelper {
+    static end() {
+        process.exit();
+    };
+}
+
 const jobPath = $.backendPath('jobs');
 if (argCommand.substr(0, 1) === '@') {
     loadJobs(jobPath);
@@ -69,9 +75,10 @@ if (typeof commands[argCommand] === 'undefined') {
     // Send only command args to function
     args.splice(0, 3);
     const runFn = commands[argCommand];
+    let afterRun = null;
     if (typeof runFn === 'object' && typeof runFn['handler'] === 'function') {
-        runFn['handler'](args);
+        afterRun = runFn['handler'](args, JobHelper);
     } else {
-        runFn(args);
+        afterRun = runFn(args, JobHelper);
     }
 }
