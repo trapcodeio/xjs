@@ -1,8 +1,9 @@
+'use strict'
+
 const packageName = "@trapcode/xjs";
 
 global["$"] = {};
-let _ = require("lodash");
-global['_'] = _;
+global._ = require("lodash");
 global["moment"] = require("moment");
 
 // Add Re-usable packages
