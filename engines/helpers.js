@@ -2,6 +2,7 @@ let {buildUrl} = $.pkgs;
 
 /* HELPER FUNCTIONS */
 let helpers = {
+
     /**
      * Get full url of path
      * @param {string} $path

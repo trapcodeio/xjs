@@ -41,5 +41,14 @@ module.exports = function (x) {
         auth() {
             return x.res.locals[$.config.auth.templateVariable]
         },
+
+        currentUrl(query = {}) {
+            if (!Object.keys(query).length) {
+                return x.req.url;
+            }
+
+            query = _.merge(x.all(), query);
+            return $.helpers.url(x.req.path, query);
+        }
     }
 };
