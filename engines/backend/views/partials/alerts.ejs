@@ -1,25 +1,25 @@
-<% if(messages.logout){ %>
+<% if(__flash.logout){ %>
     <div class="alert alert-success" role="alert">
-        <%= messages.logout %>
+        <%= __flash.logout %>
     </div>
 <% } %>
-<% if(messages.login){ %>
+<% if(__flash.login){ %>
     <div class="alert alert-success mt-2" role="alert">
-        <%= messages.login %>
+        <%= __flash.login %>
     </div>
 <% } %>
-<% if(messages.login_error){ %>
+<% if(__flash.login_error){ %>
     <div class="alert alert-danger" role="alert">
-        <%= messages.login_error %>
+        <%= __flash.login_error %>
     </div>
 <% } %>
-<% if(messages.reg_success){ %>
+<% if(__flash.reg_success){ %>
     <div class="alert alert-success" role="alert">
-        <%= messages.reg_success %>
+        <%= __flash.reg_success %>
     </div>
 <% } %>
-<% if(messages.reg_error){ %>
+<% if(__flash.reg_error){ %>
     <div class="alert alert-danger" role="alert">
-        <%= messages.reg_error %>
+        <%= __flash.reg_error %>
     </div>
 <% } %>

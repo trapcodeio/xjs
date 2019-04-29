@@ -168,18 +168,22 @@ class RequestEngine {
     renderView(file, data = {}, fullPath = false) {
 
         let path = file + '.' + $.config.template.extension;
-        let all = $.config.template.locals.all;
+        let localsConfig = $.config.template.locals;
+        let all = localsConfig.all;
 
         this.res.locals['__currentView'] = file;
-        if (all || $.config.template.locals.__stackedScripts) this.res.locals['__stackedScripts'] = [];
-        if (all || $.config.template.locals.__session) this.res.locals['__session'] = this.session;
-        if (all || $.config.template.locals.__get) this.res.locals['__get'] = this.req.query;
-        if (all || $.config.template.locals.__post) this.res.locals['__post'] = this.req.body;
+        this.res.locals['__flash'] = this.req.flash();
+
+        if (all || localsConfig.__stackedScripts) this.res.locals['__stackedScripts'] = [];
+        if (all || localsConfig.__session) this.res.locals['__session'] = this.session;
+        if (all || localsConfig.__get) this.res.locals['__get'] = this.req.query;
+        if (all || localsConfig.__post) this.res.locals['__post'] = this.req.body;
 
         data = _.extend({}, this.fn, data);
 
         if (typeof fullPath === "function")
             return this.res.render(path, data, fullPath);
+
 
         return this.res.render(path, data);
     }

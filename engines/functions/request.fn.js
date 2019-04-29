@@ -9,7 +9,7 @@ module.exports = function (x) {
         },
 
         old(key, $default = '') {
-            let value = x.res.locals.messages['old:' + key];
+            let value = x.res.locals['__flash']['old:' + key];
             if (typeof value !== "undefined") {
                 return value;
             }
