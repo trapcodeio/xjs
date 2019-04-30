@@ -12,15 +12,18 @@ let serverConfig = {
     }
 };
 
+let DefaultTimestamp = 'YYYY-MM-DD H:mm:ss';
+
 let xjsConfig = {
     name: 'Xjs',
     env: 'development',
     server: serverConfig,
     database: {
-        startOnBoot: true
+        startOnBoot: true,
+        timestampFormat: DefaultTimestamp
     },
     date: {
-        format: 'YYYY-MM-DD H:mm:ss'
+        format: DefaultTimestamp
     },
     paths: {
         base: __dirname,
