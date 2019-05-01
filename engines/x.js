@@ -264,9 +264,9 @@ if (!$.isConsole) {
         if (req.body && Object.keys(req.body).length) {
             req.body = Object.assign(
                 ...Object.keys(req.body).map(key => ({
-                    [key]: req.body[key] !== '' ? req.body[key] : null
+                    [key]: req.body[key].trim() !== '' ? req.body[key] : null
                 }))
-            )
+            );
         }
 
         let x = new RequestEngine(req, res);
