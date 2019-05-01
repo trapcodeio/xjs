@@ -3,7 +3,7 @@
 const packageName = "@trapcode/xjs";
 
 global["$"] = {};
-global._ = require("lodash");
+global['_'] = require("lodash");
 global["moment"] = require("moment");
 
 // Add Re-usable packages
@@ -259,6 +259,16 @@ if (!$.isConsole) {
     const RequestEngine = require("./RequestEngine");
 
     app.use(async function (req, res, next) {
+
+        // Convert Empty Strings to Null
+        if (req.body && Object.keys(req.body).length) {
+            req.body = Object.assign(
+                ...Object.keys(req.body).map(key => ({
+                    [key]: req.body[key] !== '' ? req.body[key] : null
+                }))
+            )
+        }
+
         let x = new RequestEngine(req, res);
 
         if (x.isLogged()) {
