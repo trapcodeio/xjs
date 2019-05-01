@@ -160,12 +160,55 @@ let helpers = {
         return text;
     },
 
+    /**
+     * Random Array Generator
+     * @param {number} length
+     * @return {Array}
+     */
+    randomArray(length = 5) {
+        let i = 0;
+        let newArray = [];
+        while (i < length) {
+            newArray.push(i);
+            i++;
+        }
+
+        return newArray;
+    },
+
+    // ---------------------------
+    // ---------------------------
+    /* ------ DATE ------ */
+    // ---------------------------
+    // ---------------------------
+
     now() {
         return moment().format($.config.date.format);
     },
 
     today() {
         return this.now();
+    },
+
+    /**
+     * Parse Date
+     * @param {string} date
+     * @param {string} format
+     * @return {never|moment.Moment|*}
+     */
+    toDate(date, format = undefined) {
+        if (format === undefined) format = $.config.date.format;
+        return moment(date, format);
+    },
+
+    /**
+     * Time Ago
+     * @param date
+     * @param format
+     * @return {*}
+     */
+    timeAgo(date, format = undefined) {
+        return this.toDate(date, format).fromNow();
     }
 };
 
