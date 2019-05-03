@@ -1,6 +1,7 @@
 const requestHelpers = require('./functions/request.fn.js');
 const ObjectCollection = require('./helpers/ObjectCollection');
-
+const ejs = require('ejs');
+const fs = require('fs');
 
 class RequestEngine {
     /**
@@ -163,11 +164,12 @@ class RequestEngine {
      * @param {string} file
      * @param {Object} data
      * @param {boolean} fullPath
+     * @param useEjs
      * @returns {*}
      */
-    renderView(file, data = {}, fullPath = false) {
+    renderView(file, data = {}, fullPath = false, useEjs = false) {
 
-        let path = file + '.' + $.config.template.extension;
+        let path = file + '.' + (useEjs ? 'ejs' : $.config.template.extension);
         let localsConfig = $.config.template.locals;
         let all = localsConfig.all;
 
@@ -184,8 +186,16 @@ class RequestEngine {
         if (typeof fullPath === "function")
             return this.res.render(path, data, fullPath);
 
-
-        return this.res.render(path, data);
+        if (useEjs === true) {
+            data = Object.assign(this.res.locals, data);
+            return this.res.send(ejs.render(
+                fs.readFileSync(path).toString(),
+                data,
+                {filename: path}
+            ));
+        } else {
+            return this.res.render(file, data);
+        }
     }
 
     /**
@@ -195,8 +205,9 @@ class RequestEngine {
      * @returns {*}
      */
     renderViewFromEngine(file, data) {
+
         const view = $.engine('backend/views/' + file);
-        return this.renderView(view, data, true);
+        return this.renderView(view, data, true, true);
     }
 
     /**

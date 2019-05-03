@@ -281,6 +281,23 @@ if (!$.isConsole) {
         next()
     });
 
+    /**
+     * Set Express View Engine from config
+     */
+    if (typeof $.config.template.engine === 'function') {
+        app.engine($.config.template.extension, $.config.template.engine);
+        app.set('view engine', $.config.template.extension)
+    } else {
+        if (typeof $.config.template.use === 'string') {
+            app.use($.use.package($.config.template.use));
+        } else {
+            app.set("view engine", $.config.template.engine);
+        }
+    }
+
+    app.set("views", $.backendPath($.config.template.viewsFolder));
+
+
     // Not Tinker? Require Controllers
     if (!$.isTinker) {
         $.controller = require("./classes/Controller.js");
@@ -331,22 +348,6 @@ if (!$.isConsole) {
 
     // Start server if not tinker
     if (!$.isTinker && $.config.server.startOnBoot) {
-        /**
-         * Set Express View Engine from config
-         */
-        if (typeof $.config.template.engine === 'function') {
-            $.config.template.engine(app);
-        } else {
-            if (typeof $.config.template.use === 'function') {
-                app.use($.config.template.use);
-            } else {
-                app.set("view engine", $.config.template.engine);
-            }
-        }
-
-        app.set("views", $.backendPath($.config.template.viewsFolder));
-
-
         // @ts-ignore
         const http = require("http").createServer(app);
         const port = $.myConfig.get('server.port', 80);

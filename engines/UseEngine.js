@@ -73,6 +73,25 @@ function fileExistsInPath(file, path, suffix = '') {
 }
 
 class UseEngine {
+    /**
+     * Use Package from npm.
+     * @param $package
+     * @param handleError
+     * @return {boolean|*}
+     */
+    static package($package, handleError = false) {
+        try {
+            return require($package);
+        } catch (e) {
+            return handleError ? false : $.logErrorAndExit(`Package {${[$package]}} not found in node_modules.`);
+        }
+    }
+
+    /**
+     * Use file from backend
+     * @param {string} path
+     * @return {*}
+     */
     static file(path) {
         let fullPath = $.backendPath('{file}.js');
         const [hasPath, realPath] = fileExistsInPath(path, fullPath);
@@ -82,6 +101,12 @@ class UseEngine {
         return require(realPath);
     }
 
+    /**
+     * Use Model
+     * @param {string} model
+     * @param {boolean} [handleError=true]
+     * @return {boolean|*}
+     */
     static model(model, handleError = true) {
         let fullPath = $.backendPath('models/{file}.js');
         const [hasPath, realPath] = fileExistsInPath(model, fullPath);
@@ -92,6 +117,13 @@ class UseEngine {
         return require(realPath);
     }
 
+    /**
+     * Use Middleware
+     * @param {string} middleware
+     * @param {boolean} [handleError=true]
+     * @param {boolean} [suffix=true]
+     * @return {boolean|*}
+     */
     static middleware(middleware, handleError = true, suffix = true) {
         if (typeof Use.middlewares === 'object') {
             const useMiddlewares = Use.middlewares;
