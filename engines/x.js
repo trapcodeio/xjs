@@ -290,6 +290,8 @@ if (!$.isConsole) {
     } else {
         if (typeof $.config.template.use === 'string') {
             app.use($.use.package($.config.template.use));
+        } else if (typeof $.config.template.use === 'function') {
+            app.use($.config.template.use);
         } else {
             app.set("view engine", $.config.template.engine);
         }
