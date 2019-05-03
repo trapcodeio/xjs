@@ -331,8 +331,21 @@ if (!$.isConsole) {
 
     // Start server if not tinker
     if (!$.isTinker && $.config.server.startOnBoot) {
+        /**
+         * Set Express View Engine from config
+         */
+        if (typeof $.config.template.engine === 'function') {
+            $.config.template.engine(app);
+        } else {
+            if (typeof $.config.template.use === 'function') {
+                app.use($.config.template.use);
+            } else {
+                app.set("view engine", $.config.template.engine);
+            }
+        }
+
         app.set("views", $.backendPath($.config.template.viewsFolder));
-        app.set("view engine", $.config.template.engine);
+
 
         // @ts-ignore
         const http = require("http").createServer(app);

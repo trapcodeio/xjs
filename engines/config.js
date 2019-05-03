@@ -1,3 +1,5 @@
+const DefaultTimestamp = 'YYYY-MM-DD H:mm:ss';
+
 let serverConfig = {
     startOnBoot: true,
     port: 2000,
@@ -12,7 +14,6 @@ let serverConfig = {
     }
 };
 
-let DefaultTimestamp = 'YYYY-MM-DD H:mm:ss';
 
 let xjsConfig = {
     name: 'Xjs',
@@ -36,6 +37,7 @@ let xjsConfig = {
         xjs: 'xjs'
     },
     template: {
+        use: false,
         engine: 'ejs',
         extension: 'ejs',
         // Relative to backend path
