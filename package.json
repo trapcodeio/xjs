@@ -1,6 +1,6 @@
 {
   "name": "@trapcode/xjs",
-  "version": "0.0.66",
+  "version": "0.0.67",
   "description": "ExpressJs Framework for faster developments built to adopt the laravel artisan lifestyle and some other functions needed to set up scalable Web Apps. ",
   "main": "index.js",
   "repository": {
