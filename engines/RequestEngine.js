@@ -215,6 +215,15 @@ class RequestEngine {
      * @returns {boolean}
      */
     isLogged() {
+        /*
+        * If authUser has been set before then return true.
+        * Prevents Bcrypt from running twice.
+        * ThereBy increasing runtime.
+        */
+        if (this.authUser() !== undefined) {
+            return true;
+        }
+
         let x = this;
 
         if (typeof x.session.email === 'undefined' || typeof x.session.loginKey === 'undefined') {

@@ -52,28 +52,34 @@ class ControllerEngine {
                         boot = await boot;
                     }
                 }
-3
-                // If `method` is not static then initialize controller.
+
+                /*
+                 * Since we can't tell if `method` is static we check
+                 * If `method` is not static then initialize controller and set to `useController`
+                 */
+                let useController = controller;
                 if (typeof controller[method] !== 'function') {
-                    controller = new controller();
+                    // Initialize controller
+                    useController = new controller();
                 }
 
-                const controllerName = (typeof controller.constructor !== "undefined") ? controller.constructor.name : '';
+                const error = new ErrorEngine(x);
+                const controllerName = (typeof useController.constructor !== "undefined") ? controller.constructor.name : '';
 
-                let error = new ErrorEngine(x);
                 try {
-                    if (typeof controller[method] !== 'function') {
+                    // If `method` does not exists then display error
+                    if (typeof useController[method] !== 'function') {
                         return error.controllerMethodNotFound('', method, controllerName)
                     }
 
-                    let $return = controller[method](x, boot);
+                    let $return = useController[method](x, boot);
 
 
                     if ($.fn.isPromise($return)) {
                         $return = await $return;
                     }
 
-                    if(DebugControllerAction) console.timeEnd(timeLogKey);
+                    if (DebugControllerAction) console.timeEnd(timeLogKey);
 
                     return $return
                 } catch (e) {
