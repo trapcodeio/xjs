@@ -3,7 +3,13 @@
  * @class
  */
 class Controller {
-    // No methods to add yet!
+    /**
+     * Helper to detect if a variable inherits this controller.
+     * @return {boolean}
+     */
+    static get extendsMainController(){
+        return true;
+    }
 }
 
 module.exports = Controller;

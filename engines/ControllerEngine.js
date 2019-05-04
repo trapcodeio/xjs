@@ -5,6 +5,8 @@ let RequestEngine = require('./RequestEngine.js');
 let MiddleWareEngine = require('./MiddlewareEngine');
 let ErrorEngine = require('./ErrorEngine');
 
+const DebugControllerAction = !$.config.debug.enabled ? false : $.config.debug.controllerAction;
+
 class ControllerEngine {
     /**
      * @param {function} controller
@@ -21,43 +23,59 @@ class ControllerEngine {
     processController(controller, method) {
 
         if (typeof controller === 'function') {
-            try {
-                controller = new controller();
-            } catch (e) {
+            /*
+            * If `controller` does not `extendsMainController`
+            * then we know it is a nested route function.
+            * */
+            if (typeof controller['extendsMainController'] !== "boolean") {
                 let router = express.Router();
                 return controller(router);
             }
         }
 
         return async function (req, res) {
-            let x = new RequestEngine(req, res);
-            let error = new ErrorEngine(x);
+            // Log Time if `DebugControllerAction` is true
+            let timeLogKey = '';
+            if (DebugControllerAction) {
+                timeLogKey = req.method.toUpperCase() + ' - ' + req.url;
+                console.time(timeLogKey);
+            }
 
+            // Get `x` from RequestEngine
+            const x = new RequestEngine(req, res);
             try {
+                // Run static boot method if found in controller
                 let boot = undefined;
-
-                if (typeof controller.boot === 'function') {
-                    boot = controller.boot(x);
+                if (typeof controller['boot'] === 'function') {
+                    boot = controller['boot'](x);
                     if ($.fn.isPromise(boot)) {
                         boot = await boot;
                     }
                 }
-
-                let controllerName = '';
-                if (typeof controllerName.constructor !== "undefined") {
-                    controllerName = controller.constructor.name;
+3
+                // If `method` is not static then initialize controller.
+                if (typeof controller[method] !== 'function') {
+                    controller = new controller();
                 }
 
+                const controllerName = (typeof controller.constructor !== "undefined") ? controller.constructor.name : '';
+
+                let error = new ErrorEngine(x);
                 try {
                     if (typeof controller[method] !== 'function') {
                         return error.controllerMethodNotFound('', method, controllerName)
                     }
 
-                    const $return = controller[method](x, boot);
+                    let $return = controller[method](x, boot);
+
 
                     if ($.fn.isPromise($return)) {
-                        await $return;
+                        $return = await $return;
                     }
+
+                    if(DebugControllerAction) console.timeEnd(timeLogKey);
+
+                    return $return
                 } catch (e) {
                     return error.view({
                         error: {
@@ -130,7 +148,7 @@ ControllerEngine.prototype.controller = function () {
  * @param {string | Object | Function} controller
  * @param {string |null} method
  */
-let controller = function (controller, method = null) {
+const controller = function (controller, method = null) {
     let route = undefined;
     let controllerPath = null;
     if (typeof controller === 'object' && controller.hasOwnProperty('controller')) {

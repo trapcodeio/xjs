@@ -359,6 +359,7 @@ if (!$.isConsole) {
         http.listen(port, function () {
             $.log("Server started and available on " + $.helpers.url());
             $.log("PORT:" + port);
+            console.log();
         });
 
         // Start ssl server if server.ssl is available
@@ -393,6 +394,7 @@ if (!$.isConsole) {
             https.createServer(files, app).listen(httpsPort, function () {
                 $.log("Server started and available on " + $.helpers.url());
                 $.log("PORT:" + httpsPort);
+                console.log();
             });
         }
     }

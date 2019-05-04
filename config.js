@@ -3,6 +3,9 @@ require('dotenv').config();
 module.exports = {
     name: 'Xjs',
     env: 'development',
+    debug: {
+        enabled: true
+    },
     database: {
         // Start Database on boot!
         startOnBoot: true,

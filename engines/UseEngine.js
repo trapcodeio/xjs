@@ -79,11 +79,11 @@ class UseEngine {
      * @param handleError
      * @return {boolean|*}
      */
-    static package($package, handleError = false) {
+    static package($package, handleError = true) {
         try {
             return require($package);
         } catch (e) {
-            return handleError ? false : $.logErrorAndExit(`Package {${[$package]}} not found in node_modules.`);
+            return !handleError ? false : $.logErrorAndExit(`Package {${[$package]}} not found in node_modules.`);
         }
     }
 

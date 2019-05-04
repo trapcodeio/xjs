@@ -18,6 +18,10 @@ let serverConfig = {
 let xjsConfig = {
     name: 'Xjs',
     env: 'development',
+    debug: {
+        enabled: false,
+        controllerAction: true
+    },
     server: serverConfig,
     database: {
         startOnBoot: true,
@@ -83,6 +87,7 @@ let xjsConfig = {
         resave: true,
         saveUninitialized: true,
     },
+
     mail: {
         default: 'nodemailer',
         configs: {}
