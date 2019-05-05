@@ -1,16 +1,21 @@
-'use strict'
-
+'use strict';
 const packageName = "@trapcode/xjs";
 
+/**
+ * Xjs MAIN Variable
+ * @type {{}}
+ */
 global["$"] = {};
+
+/**
+ * Import Script and make global to be used everywhere.
+ */
 global['_'] = require("lodash");
 global["moment"] = require("moment");
 
-// Add Re-usable packages
-$.pkgs = {
-    os: require('os'),
-    buildUrl: require('build-url')
-};
+const FS = require("fs-extra");
+const ObjectCollection = require("./helpers/ObjectCollection");
+
 
 /**
  * .Env File Reader Helper
@@ -26,91 +31,38 @@ $.env = (key, $default = undefined) => {
 };
 
 // @ts-ignore
-if (typeof XjsConfig["isTinker"] !== "undefined") {
-    // @ts-ignore
-    $.isTinker = XjsConfig["isTinker"];
-} else {
-    $.isTinker = false;
-}
+/**
+ * If isTinker is set in config then set isTinker.
+ */
+$.isTinker = XjsConfig["isTinker"] !== "undefined" && XjsConfig['isTinker'] === true;
 
-// Set isConsole if found in global variable.
-$.isConsole = typeof global["$isConsole"] !== "undefined";
 
-const DefaultXConfig = require("./config");
-$.config = DefaultXConfig;
+/**
+ * If isConsole is set in config then set isTinker.
+ */
+$.isConsole = typeof global["__isConsole"] !== "undefined" && global['__isConsole'] === true;
+delete global['__isConsole'];
+
+
+const DefaultConfig = require("./config");
+$.config = DefaultConfig;
 // @ts-ignore
-$.config = _.merge(DefaultXConfig, XjsConfig);
+$.config = _.merge(DefaultConfig, XjsConfig);
 
 // Delete global config;
 delete global["XjsConfig"];
 
-const consoleColors = require("./objects/consoleColors.obj");
+// add a shortcut to modify $.config
+$.myConfig = new ObjectCollection($.config);
 
 /**
- * Log Function
- * @param {*} args
+ * Require Log Functions
  */
-$.log =
-    function (...args) {
-        args.unshift("===> ");
-        return console.log(...args);
-    };
-
-/**
- * Log only if not console
- * @param {*} args
- */
-$.logIfNotConsole = function (...args) {
-    if (!$.isConsole) {
-        $.log(...args);
-    }
-};
-
-/**
- * @param {*} args
- */
-$.logAndExit = function (...args) {
-    if (args.length) $.log(...args);
-    process.exit();
-};
-
-/**
- * @param {*} args
- */
-$.logError = function (...args) {
-    let end = false;
-    if (args[args.length - 1] === true) {
-        args.splice(args.length - 1, 1);
-        end = true
-    }
-
-    console.log(consoleColors.fgRed);
-
-    console.log(...args);
-
-    console.log(consoleColors.reset);
-
-    if (end) {
-        return process.exit();
-    }
-};
-
-/**
- * @param {*} arg
- */
-$.logErrorAndExit = function (arg) {
-    return $.logError(arg, true);
-};
+require('./functions/logs.fn');
 
 // Display Start Message!
 $.logIfNotConsole("Starting Xjs...");
 
-const ObjectCollection = require("./helpers/ObjectCollection");
-// add a shortcut to modify $.config
-$.myConfig = new ObjectCollection($.config);
-
-const PATH = require("path");
-const FS = require("fs-extra");
 const paths = $.config.paths;
 const baseFiles = paths.base + "/";
 const backendFiles = baseFiles + paths.backend + "/";
@@ -131,10 +83,6 @@ if (typeof paths.engine === "string") {
 
 if (!FS.existsSync(EnginePath)) {
     $.logAndExit("No Engine Found @ " + EnginePath);
-}
-
-if (typeof $.config.server === "undefined") {
-    $.logAndExit("Server config not found!");
 }
 
 /**
@@ -172,8 +120,14 @@ $.engineData = new ObjectCollection();
 // Require global variables
 require("./global.js");
 
-// Run Http Server if app is not running in console.
-if (!$.isConsole) {
+if ($.isConsole) {
+    $.model = require("./ModelEngine.js");
+    $.router = require("./RouterEngine.js");
+    $.backendPath("routers/router", true);
+    $.router.processRoutes();
+} else {
+    // Run Http Server if app is not running in console.
+    const PATH = require("path");
     const express = require("express");
     const app = express();
 
@@ -284,20 +238,30 @@ if (!$.isConsole) {
     /**
      * Set Express View Engine from config
      */
-    if (typeof $.config.template.engine === 'function') {
-        app.engine($.config.template.extension, $.config.template.engine);
-        app.set('view engine', $.config.template.extension)
+    const template = $.config.template;
+
+    if (typeof template.engine === 'function') {
+
+        app.engine(template.extension, template.engine);
+        app.set('view engine', template.extension)
+
     } else {
-        if (typeof $.config.template.use === 'string') {
-            app.use($.use.package($.config.template.use));
-        } else if (typeof $.config.template.use === 'function') {
-            app.use($.config.template.use);
+        if (typeof template.use === 'string') {
+
+            app.use($.use.package(template.use));
+
+        } else if (typeof template.use === 'function') {
+
+            app.use(template.use);
+
         } else {
-            app.set("view engine", $.config.template.engine);
+
+            app.set("view engine", template.engine);
+
         }
     }
 
-    app.set("views", $.backendPath($.config.template.viewsFolder));
+    app.set("views", $.backendPath(template.viewsFolder));
 
 
     // Not Tinker? Require Controllers
@@ -398,9 +362,4 @@ if (!$.isConsole) {
             });
         }
     }
-} else {
-    $.model = require("./ModelEngine.js");
-    $.router = require("./RouterEngine.js");
-    $.backendPath("routers/router", true);
-    $.router.processRoutes();
 }

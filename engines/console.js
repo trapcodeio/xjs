@@ -3,9 +3,8 @@ if (typeof XjsConfig === 'undefined') {
     console.log('=====> XjsConfig not found!');
     process.exit();
 }
-
 // Require Xpresser
-global['$isConsole'] = true;
+global['__isConsole'] = true;
 require('./x');
 
 $['console:args'] = process.argv;
@@ -18,7 +17,7 @@ $['console:colors'] = require('./objects/consoleColors.obj');
 
 const args = $['console:args'];
 
-require($.engine('objects/commands.obj'));
+require('./objects/commands.obj');
 
 // Require artisan helper functions
 let argCommand = args[2];
