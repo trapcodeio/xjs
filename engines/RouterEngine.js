@@ -6,6 +6,25 @@ const ControllerEngine = require('./ControllerEngine');
 let AllRoutes = [];
 let NameToRoute = {};
 
+/**
+ * Push Route To AllRoutes
+ * @param method
+ * @param path
+ * @param action
+ * @return {Route}
+ */
+function pushToRoute(method, path, action) {
+    if (action === undefined && path.substr(0, 1) === '@') {
+        path = path.substr(1);
+        action = path;
+    }
+
+    let eachRoute = new Route(method, path, action);
+    AllRoutes.push(eachRoute);
+    return eachRoute;
+}
+
+
 let RouterEngine = {
     /**
      * Set path or grouped routes
@@ -32,61 +51,51 @@ let RouterEngine = {
     /**
      * Express Router All
      * @param {string} path
-     * @param {string} action
+     * @param {string} [action]
      * @returns {Route}
      */
     all(path, action) {
-        let eachRoute = new Route('all', path, action);
-        AllRoutes.push(eachRoute);
-        return eachRoute;
+        return pushToRoute('all', path, action);
     },
 
     /**
      * Express Router Delete
      * @param {string} path
-     * @param {string} action
+     * @param {string} [action]
      * @returns {Route}
      */
     delete(path, action) {
-        let eachRoute = new Route('delete', path, action);
-        AllRoutes.push(eachRoute);
-        return eachRoute;
+        return pushToRoute('delete', path, action);
     },
 
     /**
      * Express Router Get
      * @param {string} path
-     * @param {string} action
+     * @param {string} [action]
      * @returns {Route}
      */
     get(path, action) {
-        let eachRoute = new Route('get', path, action);
-        AllRoutes.push(eachRoute);
-        return eachRoute;
+        return pushToRoute('get', path, action);
     },
 
     /**
      * Express Router Post
      * @param {string} path
-     * @param {string} action
+     * @param {string} [action]
      * @returns {Route}
      */
     post(path, action) {
-        let eachRoute = new Route('post', path, action);
-        AllRoutes.push(eachRoute);
-        return eachRoute;
+        return pushToRoute('post', path, action);
     },
 
     /**
      * Express Router Put
      * @param {string} path
-     * @param {string} action
+     * @param {string} [action]
      * @returns {Route}
      */
     put(path, action) {
-        let eachRoute = new Route('put', path, action);
-        AllRoutes.push(eachRoute);
-        return eachRoute;
+        return pushToRoute('put', path, action);
     },
 
     /**
