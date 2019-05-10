@@ -2,11 +2,11 @@ const Route = $.router;
 
 Route.path('/', () => {
     Route.get('', 'index');
-    Route.get('/dashboard', 'dashboard');
+    Route.get('@dashboard');
 }).controller('Auth').actionsAsName();
 
 Route.path('/auth', () => {
-    Route.post('/login', 'login');
-    Route.post('/register', 'register');
-    Route.get('/logout', 'logout');
-}).controller('Auth').actionsAsName().as('auth');
+    Route.post('@login');
+    Route.post('@register');
+    Route.all('@logout');
+}).controller('Auth', true).as('auth');

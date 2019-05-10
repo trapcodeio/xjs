@@ -36,16 +36,19 @@ class Route {
     as(as) {
         this.data['as'] = as;
         return this;
-
     }
 
     /**
      * Set Controller of this route
      * @param {string|function} controller
+     * @param {boolean} [actionsAsName=false]
      * @returns {Route}
      */
-    controller(controller) {
+    controller(controller, actionsAsName = false) {
         this.data['controller'] = controller;
+        if (actionsAsName === true) {
+            return this.actionsAsName();
+        }
         return this;
     }
 
@@ -54,10 +57,14 @@ class Route {
      * @returns {Route}
      */
     actionAsName() {
-        if (typeof this.data.children !== 'undefined') return this.actionsAsName();
+        if (typeof this.data.children !== 'undefined')
+            return $.logErrorAndExit(new Error(`actionAsName cannot be used on Route, use actionsAsName instead, difference is action is plural.`));
 
-        let controller = this.data.controller;
-        if (!controller) throw new Error('Method: ' + controller + ' not found!');
+        const controller = this.data.controller;
+
+        if (!controller)
+            return $.logErrorAndExit(new Error('Method: ' + controller + ' not found!'));
+
         let name = '';
         if (controller.indexOf('@') >= 0) {
             name = controller.split('@')[1];
