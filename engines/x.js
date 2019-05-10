@@ -219,7 +219,7 @@ if ($.isConsole) {
         if (req.body && Object.keys(req.body).length) {
             req.body = Object.assign(
                 ...Object.keys(req.body).map(key => ({
-                    [key]: req.body[key].trim() !== '' ? req.body[key] : null
+                    [key]: typeof req.body[key] === 'string' && req.body[key].trim() === '' ? null : req.body[key]
                 }))
             );
         }
