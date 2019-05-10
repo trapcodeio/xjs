@@ -11,10 +11,8 @@ global["$"] = {};
  * Import Script and make global to be used everywhere.
  */
 global['_'] = require("lodash");
-global["moment"] = require("moment");
-
-const FS = require("fs-extra");
 const ObjectCollection = require("./helpers/ObjectCollection");
+const FS = require("fs-extra");
 
 
 /**
@@ -82,7 +80,7 @@ if (typeof paths.engine === "string") {
 }
 
 if (!FS.existsSync(EnginePath)) {
-    $.logAndExit("No Engine Found @ " + EnginePath);
+    $.logAndExit("No Framework Engine Found @ " + EnginePath);
 }
 
 /**
@@ -121,11 +119,14 @@ $.engineData = new ObjectCollection();
 require("./global.js");
 
 if ($.isConsole) {
+
     $.model = require("./ModelEngine.js");
     $.router = require("./RouterEngine.js");
     $.backendPath("routers/router", true);
     $.router.processRoutes();
+
 } else {
+
     // Run Http Server if app is not running in console.
     const PATH = require("path");
     const express = require("express");

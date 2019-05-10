@@ -1,9 +1,11 @@
 // ts-check
+global["moment"] = require("moment");
+
 // Packages to be reused by your xjs project
 $.pkgs = {
-    os: require('os'),
     buildUrl: require('build-url')
 };
+
 
 // Use Engine
 $.use = require('./UseEngine');

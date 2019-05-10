@@ -81,7 +81,7 @@ class ControllerEngine {
 
                     if (DebugControllerAction) console.timeEnd(timeLogKey);
 
-                    return $return
+                    return $return;
                 } catch (e) {
                     return error.view({
                         error: {
