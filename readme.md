@@ -30,7 +30,7 @@ Run `xjs --help` after installation.
 ```console
 xjs new my-xjs-app
 ```
-
+Create your sqlite file in `storage/app/db/database.sqlite`
 After that, you will be told to run `xjs migrate`  to migrate your database.
 ```
 Using environment: development
