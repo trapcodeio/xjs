@@ -107,24 +107,16 @@ let helpers = {
     mix(file) {
         let mix;
         let localVariableName = 'laravelMixManifest';
-        if (file.substr(0, 1) === '/') file = file.substr(1);
-        file = '/public/' + file;
+        if (file.substr(0, 1) !== '/') file = '/' + file;
 
         if ($.engineData.has(localVariableName)) {
             mix = $.engineData.get(localVariableName);
         } else {
-            const mixFile = $.basePath('mix-manifest.json');
+            const mixFile = $.basePath('public/mix-manifest.json');
             const fs = require('fs');
             if (fs.existsSync(mixFile)) {
-                let manifestJson = fs.readFileSync(mixFile).toString();
-                let manifest = {};
-                try {
-                    manifest = JSON.parse(manifestJson);
-                } catch (e) {
-                }
-
-                $.engineData.set(localVariableName, manifest);
-                mix = manifest;
+                mix = require(mixFile);
+                $.engineData.set(localVariableName, mix);
             }
         }
 
@@ -133,13 +125,7 @@ let helpers = {
             file = mix[file];
         }
 
-        if (file.substr(0, 8) === '/public/') {
-            file = file.substr(8);
-        }
-
-        file = this.url(file);
-
-        return file;
+        return this.url(file);
     },
 
     env: $.env,

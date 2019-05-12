@@ -1,9 +1,7 @@
-const x = require('./config');
 const mix = require('laravel-mix');
+mix.setPublicPath('public');
 
-mix.setPublicPath(x.paths.base);
-
-mix.js('frontend/js/app.js', 'public/js');
-mix.sass('frontend/scss/app.scss', 'public/css');
+mix.js('frontend/js/app.js', 'js');
+mix.sass('frontend/scss/app.scss', 'css');
 
 mix.version();
