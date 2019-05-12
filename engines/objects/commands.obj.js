@@ -1,4 +1,3 @@
-// const shell = require('shelljs');
 const os = require('os');
 const PATH = require('path');
 const fs = require('fs-extra');
@@ -6,7 +5,6 @@ const artisan = require('../functions/artisan.fn');
 const artisanConfig = $.config.artisan;
 const colors = require('./consoleColors.obj');
 
-// const args = $['console:args'];
 let logThis = artisan.logThis;
 
 $['console:commands'] = {

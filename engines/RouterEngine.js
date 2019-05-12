@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Route = require('./classes/Route');
 const Router = $.app;
-const ControllerEngine = require('./ControllerEngine');
+const Controller = require('./ControllerEngine');
 
 let AllRoutes = [];
 let NameToRoute = {};
@@ -252,7 +252,7 @@ let RouterEngine = {
                 this.processRoutes(route.children, route);
             } else {
                 if (Router && (!$.isTinker && !$.isConsole)) {
-                    Router[route.method](route.path, ControllerEngine(route))
+                    Router[route.method](route.path, Controller(route))
                 }
             }
         }

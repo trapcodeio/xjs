@@ -28,8 +28,8 @@ module.exports = {
     },
 
     factory($file, $data = {}) {
-        let source = fs.readFileSync($file).toString();
-        let template = Handlebars.compile(source);
+        const source = fs.readFileSync($file).toString();
+        const template = Handlebars.compile(source);
         return template($data);
     },
 
@@ -50,7 +50,8 @@ module.exports = {
         if (fs.existsSync($to)) {
             return this.logThisAndExit($name + ' already exists!');
         }
-        let thisPath = Path.dirname($to);
+
+        const thisPath = Path.dirname($to);
         if (!fs.existsSync(thisPath)) fs.mkdirpSync(thisPath);
 
         let $from = $.engine('factory/' + $for + '.hbs');

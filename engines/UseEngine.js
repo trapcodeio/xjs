@@ -1,7 +1,20 @@
+/**
+ * UseEngine is a class that provides methods for including
+ * different types of files.
+ *
+ * UseEngine is later exposed to the framework as $.use
+ */
+
 const fs = require('fs');
 const StringHelper = require('./helpers/String');
 
 let Use = {};
+
+/**
+ * UseEngine requires `Use.js` in frameworks backend folder.
+ * Object returned from Use.js is processed and saved in $.engineData as path to file.
+ * @type {{}}
+ */
 const UsePath = $.backendPath('Use.js');
 
 if ($.engineData.has(UsePath)) {

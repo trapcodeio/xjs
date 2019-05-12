@@ -4,6 +4,8 @@ const consoleColors = require("../objects/consoleColors.obj");
  * @param {*} args
  */
 $.log = function (...args) {
+    if(!args.length) return console.log('');
+
     args.unshift("===> ");
     return console.log(...args);
 };

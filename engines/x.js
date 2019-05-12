@@ -1,24 +1,30 @@
 'use strict';
 const packageName = "@trapcode/xjs";
 
-/**
+/*
  * Xjs MAIN Variable
- * @type {{}}
  */
-global["$"] = {};
+let $ = {};
 
-/**
- * Import Script and make global to be used everywhere.
+/*
+ * Import Scripts and make global to be used everywhere.
  */
-global['_'] = require("lodash");
+const _ = require("lodash");
 const ObjectCollection = require("./helpers/ObjectCollection");
 const FS = require("fs-extra");
+
+// Make Globals
+global["$"] = $;
+global["_"] = _;
+
+// let
+let XjsConfig = global["XjsConfig"];
 
 
 /**
  * .Env File Reader Helper
  * @param {string | number} key
- * @param {*} $default
+ * @param {*} [$default]
  */
 $.env = (key, $default = undefined) => {
     if (typeof process.env[key] === "undefined") {
@@ -28,14 +34,15 @@ $.env = (key, $default = undefined) => {
     return process.env[key];
 };
 
+
 // @ts-ignore
-/**
+/*
  * If isTinker is set in config then set isTinker.
  */
 $.isTinker = XjsConfig["isTinker"] !== "undefined" && XjsConfig['isTinker'] === true;
 
 
-/**
+/*
  * If isConsole is set in config then set isTinker.
  */
 $.isConsole = typeof global["__isConsole"] !== "undefined" && global['__isConsole'] === true;
@@ -44,18 +51,18 @@ delete global['__isConsole'];
 
 const DefaultConfig = require("./config");
 $.config = DefaultConfig;
+
 // @ts-ignore
 $.config = _.merge(DefaultConfig, XjsConfig);
 
 // Delete global config;
 delete global["XjsConfig"];
 
+
 // add a shortcut to modify $.config
 $.myConfig = new ObjectCollection($.config);
 
-/**
- * Require Log Functions
- */
+// Require Log Functions
 require('./functions/logs.fn');
 
 // Display Start Message!
@@ -84,6 +91,7 @@ if (!FS.existsSync(EnginePath)) {
 }
 
 /**
+ * Get path in base folder
  * @param {string} path
  * @param {boolean} returnRequire
  */
@@ -94,6 +102,7 @@ $.basePath = function (path = '', returnRequire = false) {
 };
 
 /**
+ * Get path in backend folder.
  * @param {string} path
  * @param {boolean} returnRequire
  */
@@ -101,6 +110,15 @@ $.backendPath = function (path = '', returnRequire = false) {
     if (path[0] === '/') path = path.substr(1);
     const backend = backendFiles + path;
     return returnRequire ? require(backend) : backend;
+};
+
+/**
+ * Get path in storage folder.
+ * @param {string} path
+ */
+$.storagePath = function (path = '') {
+    if (path[0] === '/') path = path.substr(1);
+    return $.basePath($.config.paths.storage+'/'+path);
 };
 
 /**
@@ -127,8 +145,8 @@ if ($.isConsole) {
 
 } else {
 
-    // Run Http Server if app is not running in console.
-    const PATH = require("path");
+    // Run Server if app is not running in console.
+    const {dirname, resolve} = require("path");
     const express = require("express");
     const app = express();
 
@@ -179,7 +197,7 @@ if ($.isConsole) {
 
     const sessionFilePath = knexSessionConfig.connection.filename;
     if (!FS.existsSync(sessionFilePath)) {
-        FS.mkdirpSync(PATH.dirname(sessionFilePath));
+        FS.mkdirpSync(dirname(sessionFilePath));
     }
 
     const store = new KnexSessionStore({
@@ -189,9 +207,7 @@ if ($.isConsole) {
 
     app.use(cors());
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({
-        extended: true
-    }));
+    app.use(bodyParser.urlencoded({extended: true}));
 
     app.use(
         session(
@@ -291,8 +307,8 @@ if ($.isConsole) {
 
 
     app.use(function (req, res, next) {
-        let x = new RequestEngine(req, res, next);
-        let error = new (require('./ErrorEngine'))(x);
+        const x = new RequestEngine(req, res, next);
+        const error = new (require('./ErrorEngine'))(x);
         res.status(404);
 
         // respond with json
@@ -324,7 +340,7 @@ if ($.isConsole) {
         http.listen(port, function () {
             $.log("Server started and available on " + $.helpers.url());
             $.log("PORT:" + port);
-            console.log();
+            $.log();
         });
 
         // Start ssl server if server.ssl is available
@@ -338,12 +354,17 @@ if ($.isConsole) {
 
             let files = $.myConfig.get('server.ssl.files');
 
-            if (typeof files.key === "undefined" || typeof files.cert === 'undefined') {
+            if (typeof files.key !== "string" || typeof files.cert !== "string") {
                 $.logErrorAndExit('Config {server.ssl.files} not configured properly!')
             }
 
-            files.key = PATH.resolve(files.key);
-            files.cert = PATH.resolve(files.cert);
+            if (!files.key.length || !files.cert.length) {
+                $.logErrorAndExit('Config {server.ssl.files} not configured properly!')
+            }
+
+
+            files.key = resolve(files.key);
+            files.cert = resolve(files.cert);
 
             if (!FS.existsSync(files.key)) {
                 $.logErrorAndExit('Key file {' + files.key + '} not found!')
@@ -359,7 +380,7 @@ if ($.isConsole) {
             https.createServer(files, app).listen(httpsPort, function () {
                 $.log("Server started and available on " + $.helpers.url());
                 $.log("PORT:" + httpsPort);
-                console.log();
+                $.log();
             });
         }
     }

@@ -1,26 +1,33 @@
 // Find XjsConfig
 if (typeof XjsConfig === 'undefined') {
-    console.log('=====> XjsConfig not found!');
+    console.log('===> XjsConfig not found!');
     process.exit();
 }
-// Require Xpresser
+
+if (process.argv.length <= 2) {
+    console.log('===> No command provided!');
+    process.exit();
+}
+
+let args = process.argv;
+
+// Require Framework
 global['__isConsole'] = true;
 require('./x');
 
-$['console:args'] = process.argv;
-if ($['console:args'][2] === '--from-tinker') {
+if (args[2] === '--from-tinker') {
     $.isTinker = true;
-    $['console:args'].splice(2, 1);
+    args.splice(2, 1);
 }
-
-$['console:colors'] = require('./objects/consoleColors.obj');
-
-const args = $['console:args'];
 
 require('./objects/commands.obj');
 
 // Require artisan helper functions
 let argCommand = args[2];
+if (typeof argCommand === "undefined") {
+    $.logErrorAndExit('No command provided!');
+}
+
 let commands = $['console:commands'];
 
 const fs = require('fs');

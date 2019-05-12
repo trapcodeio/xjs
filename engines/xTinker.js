@@ -1,19 +1,27 @@
 require('./x');
+
 const consoleCommands = require('./objects/commands.obj');
 const colors = require('./objects/consoleColors.obj');
 
-const historyFile = $.engine('database/tinker.json');
-
-const shell = require('shelljs');
 const fs = require('fs');
+const {dirname} = require('path');
+const fse = require('fs-extra');
+const shell = require('shelljs');
 const keypress = require('keypress');
 const vm = require('vm');
 const Inspector = require('util').inspect;
 const os = require('os');
 
+const historyFile = $.storagePath('framework/console/tinker.json');
+const historyFileFolder = dirname(historyFile);
 
-let stdin = process.stdin;
-let stdout = process.stdout;
+/* Make historyFile folder if it does not exits! */
+if (!fs.existsSync(historyFileFolder)) {
+    fse.mkdirSync(historyFileFolder, {recursive: true});
+}
+
+const stdin = process.stdin;
+const stdout = process.stdout;
 
 keypress(stdin);
 
@@ -27,6 +35,7 @@ let insideBracket = "";
 
 let cursorPosition = null;
 let isEditorMode = false;
+
 let setEditorMode = function (mode) {
     isEditorMode = mode;
 };
@@ -36,6 +45,7 @@ let isSilent = false;
 let history = [];
 let currentHistory = 0;
 
+/* Set Content Available in console.*/
 const thisContext = vm.createContext(global);
 thisContext.require = require;
 
