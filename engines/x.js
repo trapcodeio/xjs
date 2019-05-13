@@ -139,7 +139,10 @@ require("./global.js");
 if ($.isConsole) {
 
     $.model = require("./ModelEngine.js");
+
+    $.router = require("./Routing/Router");
     $.routerEngine = require("./Routing/RouterEngine.js");
+
     $.backendPath("routers/router", true);
     $.routerEngine.processRoutes();
 
