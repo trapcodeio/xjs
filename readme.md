@@ -17,6 +17,8 @@ A powerful framework for nodejs, Using `expressjs` as a server and also other co
 ### Installation
 Installing Xjs Framework requires [**Xjs CLI**](https://www.npmjs.com/package/xjs-cli)
 
+The `xjs-cli` command includes all the helpers you need.
+
 #### Install Xjs-CLI
 ```console
 npm install xjs-cli -g
