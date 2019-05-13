@@ -1,1 +1,1 @@
-const Route = $.use.router();
+const Route = $.router;

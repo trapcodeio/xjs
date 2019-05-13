@@ -7,7 +7,6 @@
 
 const fs = require('fs');
 const StringHelper = require('./helpers/String');
-const Router = require('./Routing/Router');
 
 let Use = {};
 
@@ -160,11 +159,11 @@ class UseEngine {
 
 
     /**
-     * Get Router
-     * @return {Router}
+     * Return Router
+     * @return {$.router}
      */
     static router() {
-        return Router;
+        return $.router;
     }
 }
 

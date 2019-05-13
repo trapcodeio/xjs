@@ -1,4 +1,4 @@
-const Route = $.use.router();
+const Route = $.router;
 
 Route.path('/', () => {
     Route.get('', 'index');

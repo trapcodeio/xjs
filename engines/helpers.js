@@ -59,7 +59,7 @@ let helpers = {
             $keys = [$keys];
         }
 
-        let routes = $.router.nameToPath();
+        let routes = $.routerEngine.nameToPath();
 
         if (typeof routes[$route] !== 'undefined') {
             let path = routes[$route];

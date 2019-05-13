@@ -52,6 +52,7 @@ class AuthController extends $.controller {
             }
         }
 
+        // If is xhr request then return json.
         if (x.req.xhr) {
             return x.toApi({
                 logged,
@@ -68,16 +69,22 @@ class AuthController extends $.controller {
             .where({email})
             .first();
 
+        // User Exists
         if (user !== undefined) {
             x.with("reg_error", "Email has an account already.");
             return x.withOld().redirectBack();
         }
 
+        // Encrypt User Password
         const password = $.bcrypt.hashSync(x.get("join-password"), 10);
+
+        // Get User Name
         const name = x.get("join-name");
 
+        // Setup new user data object
         let newUser = {email, password, name};
 
+        // Inset new user data object
         await User.query().insert(newUser);
 
         x.with('reg_success', 'Registration successful, Login now!');

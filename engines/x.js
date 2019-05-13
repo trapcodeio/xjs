@@ -139,9 +139,9 @@ require("./global.js");
 if ($.isConsole) {
 
     $.model = require("./ModelEngine.js");
-    $.router = require("./Routing/RouterEngine.js");
+    $.routerEngine = require("./Routing/RouterEngine.js");
     $.backendPath("routers/router", true);
-    $.router.processRoutes();
+    $.routerEngine.processRoutes();
 
 } else {
 
@@ -295,15 +295,15 @@ if ($.isConsole) {
         require(beforeRoutesPath);
     }
 
-    // Require and process Application Routes.
-    $.router = require("./Routing/RouterEngine.js");
-    $.wiring = require("./Routing/Router");
+    // Require Router Helper
+    $.router = require("./Routing/Router");
+    $.routerEngine = require("./Routing/RouterEngine.js");
 
 
     // Require Routes
     $.backendPath("routers/router", true);
     // Process Routes
-    $.router.processRoutes();
+    $.routerEngine.processRoutes();
 
 
     app.use(function (req, res, next) {

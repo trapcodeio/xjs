@@ -76,7 +76,7 @@ $['console:commands'] = {
         }
 
         if (name === '--routes') {
-            defaultContent = $.base64.encode($.router.nameToUrl());
+            defaultContent = $.base64.encode($.routerEngine.nameToUrl());
             defaultContent = "<script>" + os.EOL +
                 "window['--routes'] = '" + defaultContent + "';" + os.EOL +
                 "</script>"
