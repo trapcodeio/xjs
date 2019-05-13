@@ -139,7 +139,7 @@ require("./global.js");
 if ($.isConsole) {
 
     $.model = require("./ModelEngine.js");
-    $.router = require("./RouterEngine.js");
+    $.router = require("./Routing/RouterEngine.js");
     $.backendPath("routers/router", true);
     $.router.processRoutes();
 
@@ -220,9 +220,6 @@ if ($.isConsole) {
     app.use(flash());
 
     app.locals["appData"] = {};
-    app.locals["engineData"] = {};
-
-    $.appData = new ObjectCollection(app.locals["appData"]);
 
     $.app = app;
 
@@ -299,7 +296,10 @@ if ($.isConsole) {
     }
 
     // Require and process Application Routes.
-    $.router = require("./RouterEngine.js");
+    $.router = require("./Routing/RouterEngine.js");
+    $.wiring = require("./Routing/Router");
+
+
     // Require Routes
     $.backendPath("routers/router", true);
     // Process Routes

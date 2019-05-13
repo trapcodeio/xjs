@@ -7,6 +7,7 @@
 
 const fs = require('fs');
 const StringHelper = require('./helpers/String');
+const Router = require('./Routing/Router');
 
 let Use = {};
 
@@ -155,6 +156,15 @@ class UseEngine {
         }
 
         return require(realPath);
+    }
+
+
+    /**
+     * Get Router
+     * @return {Router}
+     */
+    static router() {
+        return Router;
     }
 }
 

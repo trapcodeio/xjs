@@ -1,117 +1,28 @@
 const fs = require('fs');
-const Route = require('./classes/Route');
 const Router = $.app;
-const Controller = require('./ControllerEngine');
+const Controller = require('../ControllerEngine');
+const AllRoutesKey = 'RouterEngine:allRoutes';
 
-let AllRoutes = [];
+
 let NameToRoute = {};
 
-/**
- * Push Route To AllRoutes
- * @param method
- * @param path
- * @param action
- * @return {Route}
- */
-function pushToRoute(method, path, action) {
-    if (action === undefined && path.substr(0, 1) === '@') {
-        path = path.substr(1);
-        action = path;
-    }
-
-    let eachRoute = new Route(method, path, action);
-    AllRoutes.push(eachRoute);
-    return eachRoute;
-}
 
 
-let RouterEngine = {
-    /**
-     * Set path or grouped routes
-     * @param {string} path
-     * @param {function} routes
-     * @returns {Route}
-     */
-    path(path, routes) {
-        let oldRoutes = _.clone(AllRoutes);
-        let thisRoutes = [];
-
-        AllRoutes = [];
-        routes(this);
-        thisRoutes = _.clone(AllRoutes);
-        AllRoutes = oldRoutes;
-
-        if (thisRoutes.length) {
-            let eachRoute = new Route('children', path, thisRoutes);
-            AllRoutes.push(eachRoute);
-            return eachRoute;
-        }
-    },
-
-    /**
-     * Express Router All
-     * @param {string} path
-     * @param {string} [action]
-     * @returns {Route}
-     */
-    all(path, action) {
-        return pushToRoute('all', path, action);
-    },
-
-    /**
-     * Express Router Delete
-     * @param {string} path
-     * @param {string} [action]
-     * @returns {Route}
-     */
-    delete(path, action) {
-        return pushToRoute('delete', path, action);
-    },
-
-    /**
-     * Express Router Get
-     * @param {string} path
-     * @param {string} [action]
-     * @returns {Route}
-     */
-    get(path, action) {
-        return pushToRoute('get', path, action);
-    },
-
-    /**
-     * Express Router Post
-     * @param {string} path
-     * @param {string} [action]
-     * @returns {Route}
-     */
-    post(path, action) {
-        return pushToRoute('post', path, action);
-    },
-
-    /**
-     * Express Router Put
-     * @param {string} path
-     * @param {string} [action]
-     * @returns {Route}
-     */
-    put(path, action) {
-        return pushToRoute('put', path, action);
-    },
-
+class RouterEngine {
     /**
      * Get All Registered Routes
-     * @returns {AllRoutes}
+     * @returns {*}
      */
-    allRoutes() {
-        return AllRoutes;
-    },
+    static allRoutes() {
+        return $.engineData.get(AllRoutesKey);
+    }
 
     /**
      * @private
      * @param format
      * @returns {string}
      */
-    namedRoutes(format = false) {
+    static namedRoutes(format = false) {
         if (format !== false) {
             let names = Object.keys(NameToRoute);
             let newFormat = {};
@@ -131,9 +42,14 @@ let RouterEngine = {
             return newFormat;
         }
         return NameToRoute;
-    },
+    }
 
-    nameToPath: function (returnKey = 'path') {
+    /**
+     * NameToPath
+     * @param returnKey
+     * @return {Object}
+     */
+    static nameToPath(returnKey = 'path') {
         let localVariableName = 'RouterEngine:nameToPath';
 
         if ($.engineData.has(localVariableName)) {
@@ -152,16 +68,20 @@ let RouterEngine = {
 
         $.engineData.set(localVariableName, newRoutes);
         return newRoutes;
-    },
+    }
 
-    nameToUrl() {
+    /**
+     * NameToUrl
+     * @return {Object}
+     */
+    static nameToUrl() {
         let localVariableName = 'RouterEngine:nameToUrl';
 
         if ($.engineData.has(localVariableName)) {
             return $.engineData.get([localVariableName])
         }
 
-        let routes = this.nameToPath();
+        let routes = RouterEngine.nameToPath();
         let names = Object.keys(routes);
         let newRoutes = {};
 
@@ -172,11 +92,16 @@ let RouterEngine = {
 
         $.engineData.set(localVariableName, newRoutes);
         return newRoutes;
-    },
+    }
 
-    processRoutes(routes = null, parent = {}) {
+    /**
+     * Process Routes
+     * @param routes
+     * @param parent
+     */
+    static processRoutes(routes = null, parent = {}) {
         if (!Array.isArray(routes)) {
-            routes = AllRoutes;
+            routes = RouterEngine.allRoutes();
         }
 
         for (let i = 0; i < routes.length; i++) {
@@ -249,7 +174,7 @@ let RouterEngine = {
 
 
             if (typeof route.children !== 'undefined' && Array.isArray(route.children) && route.children.length) {
-                this.processRoutes(route.children, route);
+                RouterEngine.processRoutes(route.children, route);
             } else {
                 if (Router && (!$.isTinker && !$.isConsole)) {
                     Router[route.method](route.path, Controller(route))
@@ -257,7 +182,6 @@ let RouterEngine = {
             }
         }
     }
-};
-
+}
 
 module.exports = RouterEngine;

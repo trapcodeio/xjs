@@ -11,10 +11,9 @@ class RequestEngine {
      * @param {*} next
      */
     constructor(req, res, next = null) {
-        if (req.params) this.params = req.params;
         this.res = res;
         this.req = req;
-
+        if (req.params) this.params = req.params;
         if (next !== null) this.next = next;
 
         this.session = req.session;

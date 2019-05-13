@@ -1,9 +1,10 @@
-const Route = $.router;
+const Route = $.use.router();
 
 Route.path('/', () => {
     Route.get('', 'index');
     Route.get('@dashboard');
 }).controller('Auth').actionsAsName();
+
 
 Route.path('/auth', () => {
     Route.post('@login');

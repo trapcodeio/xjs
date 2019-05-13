@@ -1,4 +1,5 @@
-let {buildUrl} = $.pkgs;
+const {buildUrl} = $.pkgs;
+const fs = require('fs');
 
 /* HELPER FUNCTIONS */
 let helpers = {
@@ -59,6 +60,7 @@ let helpers = {
         }
 
         let routes = $.router.nameToPath();
+
         if (typeof routes[$route] !== 'undefined') {
             let path = routes[$route];
             if (path.substr(-1) === '*' && !$keys.length) {
@@ -113,7 +115,6 @@ let helpers = {
             mix = $.engineData.get(localVariableName);
         } else {
             const mixFile = $.basePath('public/mix-manifest.json');
-            const fs = require('fs');
             if (fs.existsSync(mixFile)) {
                 mix = require(mixFile);
                 $.engineData.set(localVariableName, mix);

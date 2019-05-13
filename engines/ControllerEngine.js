@@ -1,12 +1,9 @@
-// @ts-check
-
+const RequestEngine = require('./RequestEngine.js');
+const ErrorEngine = require('./ErrorEngine');
+const MiddleWareEngine = require('./MiddlewareEngine');
 const express = require('express');
-let RequestEngine = require('./RequestEngine.js');
-let MiddleWareEngine = require('./MiddlewareEngine');
-let ErrorEngine = require('./ErrorEngine');
 
-const DebugControllerAction = !$.config.debug.enabled ? false : $.config.debug.controllerAction;
-
+// @ts-check
 class ControllerEngine {
     /**
      * @param {function} controller
@@ -22,6 +19,10 @@ class ControllerEngine {
      */
     processController(controller, method) {
 
+
+        const DebugControllerAction = !$.config.debug.enabled ? false : $.config.debug.controllerAction;
+
+
         if (typeof controller === 'function') {
             /*
             * If `controller` does not `extendsMainController`
@@ -33,11 +34,12 @@ class ControllerEngine {
             }
         }
 
+
         return async function (req, res) {
             // Log Time if `DebugControllerAction` is true
-            let timeLogKey = '';
+            const timeLogKey = req.method.toUpperCase() + ' - ' + req.url;
+
             if (DebugControllerAction) {
-                timeLogKey = req.method.toUpperCase() + ' - ' + req.url;
                 console.time(timeLogKey);
             }
 
@@ -58,13 +60,14 @@ class ControllerEngine {
                  * If `method` is not static then initialize controller and set to `useController`
                  */
                 let useController = controller;
+                let controllerName = (typeof controller.name === "string") ? controller.name : '';
                 if (typeof controller[method] !== 'function') {
                     // Initialize controller
                     useController = new controller();
                 }
 
                 const error = new ErrorEngine(x);
-                const controllerName = (typeof useController.constructor !== "undefined") ? controller.constructor.name : '';
+
 
                 try {
                     // If `method` does not exists then display error
@@ -73,7 +76,6 @@ class ControllerEngine {
                     }
 
                     let $return = useController[method](x, boot);
-
 
                     if ($.fn.isPromise($return)) {
                         $return = await $return;
@@ -102,6 +104,7 @@ class ControllerEngine {
      * @param {object} route
      */
     static addMiddlewares($middleware, method, route) {
+
         let middlewareKeys = Object.keys($middleware);
 
         for (let i = 0; i < middlewareKeys.length; i++) {
