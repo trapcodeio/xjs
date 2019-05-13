@@ -88,9 +88,9 @@ let helpers = {
                     path = path.replace(findKeys, replacer);
                 }
             }
-            return $includeUrl ? this.url(path, $query) : path;
+            return $includeUrl ? helpers.url(path, $query) : path;
         }
-        return $includeUrl ? this.url($route, $query) : $route;
+        return $includeUrl ? helpers.url($route, $query) : $route;
     },
 
     /**
@@ -126,7 +126,7 @@ let helpers = {
             file = mix[file];
         }
 
-        return this.url(file);
+        return helpers.url(file);
     },
 
     env: $.env,
@@ -174,7 +174,7 @@ let helpers = {
     },
 
     today() {
-        return this.now();
+        return helpers.now();
     },
 
     /**
@@ -195,7 +195,7 @@ let helpers = {
      * @return {*}
      */
     timeAgo(date, format = undefined) {
-        return this.toDate(date, format).fromNow();
+        return helpers.toDate(date, format).fromNow();
     }
 };
 

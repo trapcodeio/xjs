@@ -7,9 +7,10 @@ module.exports = function (x) {
             if (check === false && ifFalse !== undefined) return ifFalse;
             return check;
         },
+        
 
         old(key, $default = '') {
-            let value = x.res.locals['__flash']['old:' + key];
+            let value = x.res.locals.messages['old:' + key];
             if (typeof value !== "undefined") {
                 return value;
             }
@@ -41,14 +42,5 @@ module.exports = function (x) {
         auth() {
             return x.res.locals[$.config.auth.templateVariable]
         },
-
-        currentUrl(query = {}) {
-            if (!Object.keys(query).length) {
-                return x.req.url;
-            }
-
-            query = _.merge(x.all(), query);
-            return $.helpers.url(x.req.path, query);
-        }
     }
 };
