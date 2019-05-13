@@ -1,6 +1,6 @@
 {
   "name": "@trapcode/xjs",
-  "version": "0.0.77",
+  "version": "0.0.78",
   "description": "ExpressJs Framework for faster developments some other functions needed to set up scalable Web Apps. ",
   "main": "index.js",
   "repository": {
