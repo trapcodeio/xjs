@@ -13,25 +13,26 @@ class RequestEngine {
     constructor(req, res, next = null) {
         this.res = res;
         this.req = req;
+
         if (req.params) this.params = req.params;
         if (next !== null) this.next = next;
 
         this.session = req.session;
         this.bothData = this.all();
         this.locals = new ObjectCollection(res.locals);
+
         this.fn = _.extend({}, $.helpers, requestHelpers(this));
     }
 
     async auth() {
-        let x = this;
+        const x = this;
 
         if (!x.isLogged()) return null;
 
-        let User = $.backendPath('models/User.js', true);
-        let email = $.base64.decode(x.session.email);
+        const User = $.backendPath('models/User.js', true);
+        const email = $.base64.decode(x.session.email);
 
-        let user = await User.query().where('email', email).first();
-        return user
+        return await User.query().where('email', email).first();
     }
 
     /**
@@ -72,7 +73,7 @@ class RequestEngine {
      * @returns {*}
      */
     all(pluck = []) {
-        let all = _.extend({}, this.req.query, this.req.body);
+        const all = _.extend({}, this.req.query, this.req.body);
         if (pluck.length) {
             return _.pick(all, pluck);
         }
@@ -106,7 +107,7 @@ class RequestEngine {
         d['data'] = data;
 
         this.res.status(status).send(d);
-        this.res.end();
+        return this.res.end();
     }
 
     /**
@@ -144,8 +145,8 @@ class RequestEngine {
      * Redirect Back
      */
     redirectBack() {
-        let backURL = this.req.header('Referer') || '/';
-        this.redirect(backURL);
+        const backURL = this.req.header('Referer') || '/';
+        return this.redirect(backURL);
     }
 
     /**
@@ -166,11 +167,11 @@ class RequestEngine {
      * @param useEjs
      * @returns {*}
      */
-    renderView(file, data = {}, fullPath = false, useEjs = false) {
+    view(file, data = {}, fullPath = false, useEjs = false) {
 
-        let path = file + '.' + (useEjs ? 'ejs' : $.config.template.extension);
-        let localsConfig = $.config.template.locals;
-        let all = localsConfig.all;
+        const path = file + '.' + (useEjs ? 'ejs' : $.config.template.extension);
+        const localsConfig = $.config.template.locals;
+        const all = localsConfig.all;
 
         this.res.locals['__currentView'] = file;
         this.res.locals['__flash'] = this.req.flash();
@@ -198,6 +199,26 @@ class RequestEngine {
     }
 
     /**
+     * @type RequestEngine.prototype.view
+     * @param args
+     * @return {*}
+     * @alias
+     */
+    renderView(...args) {
+        return this.view(...args);
+    }
+
+    /**
+     * @type RequestEngine.prototype.view
+     * @param args
+     * @return {*}
+     * @alias
+     */
+    render(...args) {
+        return this.view(...args);
+    }
+
+    /**
      * Render View From Engine
      * @param {string} file
      * @param {Object} data
@@ -207,6 +228,7 @@ class RequestEngine {
 
         const view = $.engine('backend/views/' + file);
         return this.renderView(view, data, true, true);
+
     }
 
     /**
@@ -223,14 +245,14 @@ class RequestEngine {
             return true;
         }
 
-        let x = this;
+        const x = this;
 
         if (typeof x.session.email === 'undefined' || typeof x.session.loginKey === 'undefined') {
             return false;
         }
 
-        let email = $.base64.decode(x.session.email);
-        let hash = $.base64.decode(x.session.loginKey);
+        const email = $.base64.decode(x.session.email);
+        const hash = $.base64.decode(x.session.loginKey);
 
         return !!$.bcrypt.compareSync(email, hash);
     }
@@ -245,7 +267,7 @@ class RequestEngine {
         if (typeof data === 'string') {
             this.req.flash(data, value)
         } else {
-            let dataKeys = Object.keys(data);
+            const dataKeys = Object.keys(data);
 
             for (let i = 0; i < dataKeys.length; i++) {
                 this.req.flash(dataKeys[i], data[dataKeys[i]])
@@ -260,8 +282,8 @@ class RequestEngine {
      * @returns {RequestEngine}
      */
     withOld() {
-        let data = this.all();
-        let dataKeys = Object.keys(data);
+        const data = this.all();
+        const dataKeys = Object.keys(data);
 
         for (let i = 0; i < dataKeys.length; i++) {
             this.req.flash('old:' + dataKeys[i], data[dataKeys[i]])
@@ -282,3 +304,4 @@ RequestEngine.prototype.session = {};
 RequestEngine.prototype.fn = {};
 
 module.exports = RequestEngine;
+

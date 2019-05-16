@@ -7,7 +7,6 @@ const AllRoutesKey = 'RouterEngine:allRoutes';
 let NameToRoute = {};
 
 
-
 class RouterEngine {
     /**
      * Get All Registered Routes
@@ -24,11 +23,11 @@ class RouterEngine {
      */
     static namedRoutes(format = false) {
         if (format !== false) {
-            let names = Object.keys(NameToRoute);
+            const names = Object.keys(NameToRoute);
             let newFormat = {};
             for (let i = 0; i < names.length; i++) {
-                let name = names[i];
-                let route = NameToRoute[name];
+                const name = names[i];
+                const route = NameToRoute[name];
 
                 newFormat[route.method + ' ' + route.path] = '{' + route.name + '} ===> ' + route.controller;
 
@@ -50,13 +49,13 @@ class RouterEngine {
      * @return {Object}
      */
     static nameToPath(returnKey = 'path') {
-        let localVariableName = 'RouterEngine:nameToPath';
+        const localVariableName = 'RouterEngine:nameToPath';
 
         if ($.engineData.has(localVariableName)) {
             return $.engineData.get([localVariableName])
         }
 
-        let names = Object.keys(NameToRoute);
+        const names = Object.keys(NameToRoute);
         let newRoutes = {};
 
         for (let i = 0; i < names.length; i++) {
@@ -75,14 +74,14 @@ class RouterEngine {
      * @return {Object}
      */
     static nameToUrl() {
-        let localVariableName = 'RouterEngine:nameToUrl';
+        const localVariableName = 'RouterEngine:nameToUrl';
 
         if ($.engineData.has(localVariableName)) {
             return $.engineData.get([localVariableName])
         }
 
-        let routes = RouterEngine.nameToPath();
-        let names = Object.keys(routes);
+        const routes = RouterEngine.nameToPath();
+        const names = Object.keys(routes);
         let newRoutes = {};
 
         for (let i = 0; i < names.length; i++) {
@@ -107,6 +106,34 @@ class RouterEngine {
         for (let i = 0; i < routes.length; i++) {
             let route = routes[i]['data'];
             let nameWasGenerated = false;
+
+            /*
+            * If Route has children (meaning it is a Group/Path),
+            * and also has a parent with children, it extends the parent.
+            *
+            * This means if a child of a route is a Group/Path and does not have controller set
+            * it automatically inherits the parent controller
+            *
+            * e.g
+            * Route.path('/api', () => {
+            *   // Another Path here
+            *
+            *   Route.path('user', ()=> {
+            *       // Some Routes
+            *   });
+            *
+            *   // The path above i.e "/api/user" will inherit the parent
+            *   // Route controller and its other properties unless it has it's own defined.
+            *
+            * }).controller('Auth').as('auth');
+            */
+            if (typeof route.children !== 'undefined' && Array.isArray(route.children)) {
+
+                if (parent.children !== 'undefined') {
+                    route = _.extend({}, parent, route);
+                }
+
+            }
 
 
             if (!route.children && parent.useMethodAsName && !route.name) {
@@ -153,19 +180,24 @@ class RouterEngine {
             }
 
             if (typeof route.controller === 'string' && route.controller.includes('@')) {
-                let split = route.controller.split('@');
+                const split = route.controller.split('@');
                 let controller = split[0];
-                let method = split[1];
+                const method = split[1];
 
                 let controllerPath = $.backendPath('controllers/' + controller + '.js');
 
                 if (!fs.existsSync(controllerPath)) {
+
                     if (!controller.toLowerCase().includes('controller')) {
+
                         controllerPath = $.backendPath('controllers/' + controller + 'Controller.js');
+
                         if (!fs.existsSync(controllerPath)) {
-                            $.logErrorAndExit('Controller: ' + split.join('@') + ' not found');
+                            $.logErrorAndExit('Controller!: ' + split.join('@') + ' not found');
                         }
+
                         controller = controller + 'Controller';
+
                     }
                 }
 
