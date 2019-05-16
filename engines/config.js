@@ -20,7 +20,8 @@ let xjsConfig = {
     env: 'development',
     debug: {
         enabled: false,
-        controllerAction: true
+        controllerAction: true,
+        routerLiveView: false
     },
     server: serverConfig,
     database: {

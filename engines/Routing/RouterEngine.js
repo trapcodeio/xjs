@@ -5,6 +5,7 @@ const AllRoutesKey = 'RouterEngine:allRoutes';
 
 
 let NameToRoute = {};
+let ProcessedRoutes = [];
 
 
 class RouterEngine {
@@ -14,6 +15,31 @@ class RouterEngine {
      */
     static allRoutes() {
         return $.engineData.get(AllRoutesKey);
+    }
+
+    /**
+     * Get All Processed Routes
+     * @returns {*}
+     */
+    static allProcessedRoutes($format) {
+        if ($format === 'array') {
+            let routesArray = [];
+            for (let i = 0; i < ProcessedRoutes.length; i++) {
+
+                const processedRoute = ProcessedRoutes[i];
+
+                let routeArray = [
+                    processedRoute.method.toUpperCase(),
+                    processedRoute.path,
+                    processedRoute.name || null
+                ];
+
+                routesArray.push(routeArray);
+            }
+
+            return routesArray;
+        }
+        return ProcessedRoutes;
     }
 
     /**
@@ -130,6 +156,10 @@ class RouterEngine {
             if (typeof route.children !== 'undefined' && Array.isArray(route.children)) {
 
                 if (parent.children !== 'undefined') {
+                    if (typeof route.as === "string" && typeof parent.as === 'string' && route.as.substr(0, 1) === '.') {
+                        route.as = parent.as + route.as;
+                    }
+
                     route = _.extend({}, parent, route);
                 }
 
@@ -193,7 +223,7 @@ class RouterEngine {
                         controllerPath = $.backendPath('controllers/' + controller + 'Controller.js');
 
                         if (!fs.existsSync(controllerPath)) {
-                            $.logErrorAndExit('Controller!: ' + split.join('@') + ' not found');
+                            $.logErrorAndExit('Controller: ' + split.join('@') + ' not found');
                         }
 
                         controller = controller + 'Controller';
@@ -208,6 +238,9 @@ class RouterEngine {
             if (typeof route.children !== 'undefined' && Array.isArray(route.children) && route.children.length) {
                 RouterEngine.processRoutes(route.children, route);
             } else {
+                // Add To All Routes
+                ProcessedRoutes.push(route);
+
                 if (Router && (!$.isTinker && !$.isConsole)) {
                     Router[route.method](route.path, Controller(route))
                 }
