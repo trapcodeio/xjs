@@ -8,7 +8,7 @@ class DB {
         const database = Database[$.config.env];
         
 
-        let databaseConfigIsValid = $.ovp.validate(database, {
+        const databaseConfigIsValid = $.ovp.validate(database, {
             'client': {must: true},
             connection: {checkDbConfig: true},
         });

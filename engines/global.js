@@ -19,7 +19,7 @@ $.ovp = require('./helpers/ObjectValidatorPro');
  * Start Database on boot and set to $.db else set undefined
  */
 if ($.config.database.startOnBoot) {
-    let DB = require('./database/Db');
+    const DB = require('./database/Db');
     $.db = new DB();
 } else {
     $.db = undefined;

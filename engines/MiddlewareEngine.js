@@ -1,6 +1,6 @@
 // @ts-check
 const fs = require('fs');
-let RequestResponseInterceptor = require('./RequestEngine.js');
+const RequestResponseInterceptor = require('./RequestEngine.js');
 
 
 class MiddlewareEngine {
@@ -27,8 +27,8 @@ class MiddlewareEngine {
  * @param {string} middlewarePath
  * @param {*} action
  */
-let middleware = function (middlewarePath, action = undefined) {
-    let middlewareFile = $.use.middleware(middlewarePath, false);
+const middleware = function (middlewarePath, action = undefined) {
+    const middlewareFile = $.use.middleware(middlewarePath, false);
 
     if (middlewareFile === false) {
         return $.logErrorAndExit('Middleware: ' + middlewarePath + ' not found!');

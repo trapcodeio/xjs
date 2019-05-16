@@ -128,7 +128,7 @@ const handleCommand = function () {
         }
     } else {
         try {
-            let script = new vm.Script(command, {
+            const script = new vm.Script(command, {
                 displayErrors: true
             });
 
@@ -195,13 +195,13 @@ const addToCommand = function (str) {
     }
 };
 
-let showError = function (arg) {
+const showError = function (arg) {
     console.log();
     console.log(colors.fgRed, arg, colors.fgCyan);
     console.log();
 };
 
-let showSuccess = function (arg) {
+const showSuccess = function (arg) {
     console.log(colors.fgGreen);
     $.log(arg);
     console.log(colors.fgCyan);

@@ -33,16 +33,16 @@ let commands = $['console:commands'];
 const fs = require('fs');
 const loadJobs = function (path) {
     if (fs.existsSync(path)) {
-        let jobFiles = fs.readdirSync(path);
+        const jobFiles = fs.readdirSync(path);
         for (let i = 0; i < jobFiles.length; i++) {
-            let jobFile = jobFiles[i];
-            let jobFullPath = path + '/' + jobFile;
+            const jobFile = jobFiles[i];
+            const jobFullPath = path + '/' + jobFile;
 
             if (fs.lstatSync(jobFullPath).isDirectory()) {
                 loadJobs(jobFullPath);
             } else if (fs.lstatSync(jobFullPath).isFile()) {
 
-                let job = require(jobFullPath);
+                const job = require(jobFullPath);
                 if (typeof job !== 'object') {
                     $.logErrorAndExit('Job: {' + jobFile + '} did not return object!');
 
@@ -51,7 +51,7 @@ const loadJobs = function (path) {
                     }
                 }
 
-                let jobCommand = '@' + job.command;
+                const jobCommand = '@' + job.command;
                 commands[jobCommand] = job;
             }
         }

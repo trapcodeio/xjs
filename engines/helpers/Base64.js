@@ -1,4 +1,4 @@
-let Base64 = {
+const Base64 = {
     encode(str) {
         if (typeof str === 'object') {
             str = JSON.stringify(str);

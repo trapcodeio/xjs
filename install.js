@@ -43,16 +43,16 @@ module.exports = function (installationPath, config) {
         process.exit();
     }
 
-    let xjsFiles = fs.readdirSync(xjsPath);
+    const xjsFiles = fs.readdirSync(xjsPath);
     for (let i = 0; i < xjsFiles.length; i++) {
-        let xjsFile = xjsFiles[i];
+        const xjsFile = xjsFiles[i];
         const fileExistsAlready = fs.existsSync(installationPath + '/' + xjsFile);
 
         if (!fileExistsAlready || (fileExistsAlready && config.force === true)) {
 
             if (xjsFile.substr(0, 1) !== '.' && excludes.indexOf(xjsFile) < 0) {
                 if (hasEngines.indexOf(xjsFile) >= 0) {
-                    let engineFilePath = xjsPath + '/' + xjsFile;
+                    const engineFilePath = xjsPath + '/' + xjsFile;
                     let engineFile = fs.readFileSync(engineFilePath).toString();
 
                     engineFile = engineFile.replace("require('./engines/", "require('@trapcode/xjs/engines/");

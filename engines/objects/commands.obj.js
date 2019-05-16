@@ -5,11 +5,11 @@ const artisan = require('../functions/artisan.fn');
 const artisanConfig = $.config.artisan;
 const colors = require('./consoleColors.obj');
 
-let logThis = artisan.logThis;
+const logThis = artisan.logThis;
 
 $['console:commands'] = {
     'make:job': function (args) {
-        let job = args[0];
+        const job = args[0];
         let command = args[1];
 
         if (typeof job === 'undefined') {
@@ -20,23 +20,23 @@ $['console:commands'] = {
             command = job.trim();
         }
 
-        let jobsPath = $.backendPath('jobs');
+        const jobsPath = $.backendPath('jobs');
         artisan.copyFromFactoryToApp('job', job, jobsPath, {name: job, command}, false)
     },
 
     'make:controller': function (args) {
-        let controller = args[0];
+        const controller = args[0];
 
         if (typeof controller === 'undefined') {
             return logThis('Controller name not defined!');
         }
 
-        let controllersPath = $.backendPath('controllers');
+        const controllersPath = $.backendPath('controllers');
         artisan.copyFromFactoryToApp('controller', controller, controllersPath)
     },
 
     'make:middleware': function (args) {
-        let middleware = args[0];
+        const middleware = args[0];
         if (typeof middleware === 'undefined') {
             return logThis('Middleware name not defined!');
         }
@@ -92,7 +92,7 @@ $['console:commands'] = {
         if (name.substr(0, 2) !== '--' && fs.existsSync(fullPath)) return artisan.logThisAndExit('view {' + colors.fgYellow + name + colors.fgCyan + '} already exits!');
 
         if (!defaultContent.length) {
-            let defaultContentFile = $.backendPath('views/_.' + config.extension);
+            const defaultContentFile = $.backendPath('views/_.' + config.extension);
             if (fs.existsSync(defaultContentFile)) {
                 defaultContent = fs.readFileSync(defaultContentFile).toString();
             }

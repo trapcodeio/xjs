@@ -1,5 +1,5 @@
 require('dotenv').config();
-let config = require('./config');
+const config = require('./config');
 
 /*let migrations = {
     tableName: 'migrations'
@@ -16,7 +16,7 @@ let dbConnection = {
     migrations
 };*/
 
-let dbConnection = config.database.config;
+const dbConnection = config.database.config;
 
 module.exports = {
     development: dbConnection,

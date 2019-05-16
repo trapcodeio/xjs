@@ -29,8 +29,7 @@ class ControllerEngine {
             * then we know it is a nested route function.
             * */
             if (typeof controller['extendsMainController'] !== "boolean") {
-                let router = express.Router();
-                return controller(router);
+                return controller(express.Router());
             }
         }
 
@@ -47,7 +46,7 @@ class ControllerEngine {
             const x = new RequestEngine(req, res);
             try {
                 // Run static boot method if found in controller
-                let boot = undefined;
+                let boot = {};
                 if (typeof controller['boot'] === 'function') {
                     boot = controller['boot'](x);
                     if ($.fn.isPromise(boot)) {
@@ -60,7 +59,7 @@ class ControllerEngine {
                  * If `method` is not static then initialize controller and set to `useController`
                  */
                 let useController = controller;
-                let controllerName = (typeof controller.name === "string") ? controller.name : '';
+                const controllerName = (typeof controller.name === "string") ? controller.name : '';
                 if (typeof controller[method] !== 'function') {
                     // Initialize controller
                     useController = new controller();
@@ -105,7 +104,7 @@ class ControllerEngine {
      */
     static addMiddlewares($middleware, method, route) {
 
-        let middlewareKeys = Object.keys($middleware);
+        const middlewareKeys = Object.keys($middleware);
 
         for (let i = 0; i < middlewareKeys.length; i++) {
             let middleware = middlewareKeys[i];

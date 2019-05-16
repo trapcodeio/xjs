@@ -30,9 +30,9 @@ class AuthController extends $.controller {
     }
 
     async login(x) {
-        let email = x.get("login-email", "");
-        let password = x.get("login-password", "");
-        let errorMsg = "Incorrect email/password combination!";
+        const email = x.get("login-email", "");
+        const password = x.get("login-password", "");
+        const errorMsg = "Incorrect email/password combination!";
         let logged = false;
 
         const user = await User.query()
@@ -82,7 +82,7 @@ class AuthController extends $.controller {
         const name = x.get("join-name");
 
         // Setup new user data object
-        let newUser = {email, password, name};
+        const newUser = {email, password, name};
 
         // Inset new user data object
         await User.query().insert(newUser);

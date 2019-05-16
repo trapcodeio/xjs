@@ -82,7 +82,7 @@ let EnginePath = baseFiles + "engines/";
 if (typeof paths.engine === "string") {
     EnginePath = baseFiles + paths.engine + "/";
 } else {
-    let nodeModulesEngine = baseFiles + "node_modules/" + packageName + "/engines";
+    const nodeModulesEngine = baseFiles + "node_modules/" + packageName + "/engines";
     if (FS.existsSync(nodeModulesEngine)) {
         EnginePath = nodeModulesEngine + "/";
     }
@@ -242,7 +242,7 @@ if ($.isConsole) {
             );
         }
 
-        let x = new RequestEngine(req, res);
+        const x = new RequestEngine(req, res);
 
         if (x.isLogged()) {
             const user = await x.auth();

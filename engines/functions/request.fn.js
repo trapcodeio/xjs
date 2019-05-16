@@ -3,14 +3,16 @@ module.exports = function (x) {
         currentViewIs(path, ifTrue = undefined, ifFalse = undefined) {
             const currentView = x.res.locals['__currentView'];
             const check = currentView === path;
+
             if (check === true && ifTrue !== undefined) return ifTrue;
             if (check === false && ifFalse !== undefined) return ifFalse;
+
             return check;
         },
-        
+
 
         old(key, $default = '') {
-            let value = x.res.locals.messages['old:' + key];
+            const value = x.res.locals.__flash['old:' + key];
             if (typeof value !== "undefined") {
                 return value;
             }
@@ -40,7 +42,7 @@ module.exports = function (x) {
         },
 
         auth() {
-            return x.res.locals[$.config.auth.templateVariable]
+            return x.authUser()
         },
     }
 };
