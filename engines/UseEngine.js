@@ -7,15 +7,16 @@
 
 const fs = require('fs');
 const StringHelper = require('./helpers/String');
+const PathHelper = require('./helpers/Path');
 
 let Use = {};
 
 /**
- * UseEngine requires `Use.js` in frameworks backend folder.
- * Object returned from Use.js is processed and saved in $.engineData as path to file.
+ * UseEngine requires `use.json` in frameworks backend folder.
+ * Object returned from use.json is processed and saved in $.engineData as path to file.
  * @type {{}}
  */
-const UsePath = $.backendPath('Use.js');
+const UsePath = $.backendPath('use.json');
 
 if ($.engineData.has(UsePath)) {
     // If has usePath Before then Reuse
@@ -23,21 +24,41 @@ if ($.engineData.has(UsePath)) {
 
 } else if (fs.existsSync(UsePath)) {
     // Process Use Data
-    Use = require(UsePath);
+    try {
+        Use = require(UsePath);
+    } catch (e) {
+        $.logErrorAndExit(e.message);
+    }
 
     if (typeof Use['middlewares'] === "object") {
-        let useMiddlewares = Use['middlewares'];
+        const MiddlewareSuffix = 'Middleware';
+        const useMiddlewares = Use['middlewares'];
         let middlewareKeys = Object.keys(useMiddlewares);
 
         for (let i = 0; i < middlewareKeys.length; i++) {
             const middlewareKey = middlewareKeys[i];
-            const middleware = useMiddlewares[middlewareKey];
+            let middleware = useMiddlewares[middlewareKey];
+            let extension = '.js';
 
-            if (fs.existsSync(middleware + '.js')) {
-                const suffix = 'Middleware';
-                const hasSuffix = StringHelper.hasSuffix(middlewareKey, suffix);
+            if (middleware.substr(-3) === '.js')
+                middleware = middleware.substr(0, middleware.length - 3);
+
+            middleware = PathHelper.resolve(middleware);
+
+            let hasMiddleware = false;
+            if (fs.existsSync(middleware + extension)) {
+                hasMiddleware = true;
+            } else {
+                if (fs.existsSync(middleware + MiddlewareSuffix + extension)) {
+                    middleware = middleware + MiddlewareSuffix;
+                    hasMiddleware = true;
+                }
+            }
+
+            if (hasMiddleware) {
+                const hasSuffix = StringHelper.hasSuffix(middlewareKey, MiddlewareSuffix);
                 if (hasSuffix) {
-                    Use['middlewares'][StringHelper.withoutSuffix(middlewareKey, suffix)] = middleware;
+                    Use['middlewares'][StringHelper.withoutSuffix(middlewareKey, MiddlewareSuffix)] = middleware;
                     delete Use['middlewares'][middlewareKey];
                 } else {
                     Use['middlewares'][middlewareKey] = middleware;
@@ -47,6 +68,7 @@ if ($.engineData.has(UsePath)) {
             }
         }
     }
+
     $.engineData.set(UsePath, Use);
 }
 

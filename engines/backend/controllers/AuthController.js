@@ -2,13 +2,6 @@ const User = $.use.model($.config.auth.userModel);
 
 class AuthController extends $.controller {
 
-    static middleware() {
-        return {
-            'auth.logged': 'dashboard',
-            'auth.guest': ['index', 'login', 'register'],
-        }
-    }
-
     index(x) {
         const data = {
             action: x.get("action", "login")

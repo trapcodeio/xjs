@@ -4,10 +4,19 @@ const fs = require('fs-extra');
 const artisan = require('../functions/artisan.fn');
 const artisanConfig = $.config.artisan;
 const colors = require('./consoleColors.obj');
+const PathHelper = require('../helpers/Path');
 
 const logThis = artisan.logThis;
 
 $['console:commands'] = {
+    install([$plugin]) {
+        if ($plugin === 'undefined') {
+            return logThis('Plugin not specified!');
+        }
+
+        console.log(PathHelper.resolve($plugin));
+
+    },
     'make:job': function (args) {
         const job = args[0];
         let command = args[1];

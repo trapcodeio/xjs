@@ -1,7 +1,14 @@
 const xAuthController = $.engine('backend/controllers/AuthController', true);
 
 class AuthController extends xAuthController {
-    // Your Functions Here!
+
+    static middleware() {
+        return {
+            'auth': 'dashboard',
+            'auth.guest': ['index', 'login', 'register'],
+        }
+    }
+
 }
 
 module.exports = AuthController;

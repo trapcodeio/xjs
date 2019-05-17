@@ -5,13 +5,27 @@
 */
 
 module.exports = {
+
+    /**
+     * Default Action for this middleware.
+     * @param {RequestEngine} x
+     * @return {*}
+     */
+    allow(x) {
+        return this.logged(x)
+    },
+
     guest(x) {
-        if (x.isLogged()) return x.redirectToRoute('dashboard');
-        x.next();
+        if (x.isLogged())
+            return x.redirectToRoute('dashboard');
+
+        return x.next();
     },
 
     logged(x) {
-        if (!x.isLogged()) return x.redirect('/');
-        x.next()
+        if (!x.isLogged())
+            return x.redirect('/');
+
+        return x.next()
     },
 };
