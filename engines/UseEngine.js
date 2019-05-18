@@ -16,7 +16,7 @@ let Use = {};
  * Object returned from use.json is processed and saved in $.engineData as path to file.
  * @type {{}}
  */
-const UsePath = $.backendPath('use.json');
+const UsePath = PathHelper._path('use.json');
 
 if ($.engineData.has(UsePath)) {
     // If has usePath Before then Reuse

@@ -18,7 +18,6 @@ global["$"] = $;
 global["_"] = _;
 
 
-
 // let
 let XjsConfig = global["XjsConfig"];
 
@@ -120,7 +119,7 @@ $.backendPath = function (path = '', returnRequire = false) {
  */
 $.storagePath = function (path = '') {
     if (path[0] === '/') path = path.substr(1);
-    return $.basePath($.config.paths.storage+'/'+path);
+    return $.basePath($.config.paths.storage + '/' + path);
 };
 
 /**
@@ -138,12 +137,20 @@ $.engineData = new ObjectCollection();
 // Require global variables
 require("./global.js");
 
+// Require Plugin Engine and load plugins
+const PluginEngine = require("./PluginEngine");
+PluginEngine.loadPlugins();
+
+// Require Xpresser Router
+const XpresserRouter = require("@xpresser/router");
+$.router = new XpresserRouter;
+
+
 if ($.isConsole) {
 
     $.model = require("./ModelEngine.js");
 
-    $.router = require("./Routing/Router");
-    $.routerEngine = require("./Routing/RouterEngine.js");
+    $.routerEngine = require("./RouterEngine.js");
 
     $.backendPath("routers/router", true);
     $.routerEngine.processRoutes();
@@ -301,15 +308,13 @@ if ($.isConsole) {
         require(beforeRoutesPath);
     }
 
-    // Require Router Helper
-    $.router = require("./Routing/Router");
-    $.routerEngine = require("./Routing/RouterEngine.js");
+    $.routerEngine = require("./RouterEngine.js");
 
 
     // Require Routes
     $.backendPath("routers/router", true);
     // Process Routes
-    $.routerEngine.processRoutes();
+    $.routerEngine.processRoutes($.router.routes);
 
 
     app.use(function (req, res, next) {

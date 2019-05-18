@@ -1,4 +1,5 @@
 const Path = require('path');
+
 const pathHelpers = {
     base: 'base://',
     backend: 'backend://',
@@ -9,9 +10,14 @@ const pathHelpers = {
 };
 
 module.exports = {
-    resolve($path) {
 
-        if ($path.includes('://')) {
+    _path($path) {
+        return $.basePath('_/' + $path);
+    },
+
+    resolve($path, $resolve = true) {
+
+        if ($path.indexOf('://') > 0) {
             let pathHelperKeys = Object.keys(pathHelpers);
 
             for (let i = 0; i < pathHelperKeys.length; i++) {
@@ -28,7 +34,7 @@ module.exports = {
 
         }
 
-        return Path.resolve($path);
+        return $resolve ? Path.resolve($path) : $path;
 
     },
 
@@ -46,5 +52,14 @@ module.exports = {
 
             return $.basePath(`${$helper}/${$path}`)
         }
+    },
+
+    /**
+     * Get path in storage/framework folder.
+     * @param {string} path
+     */
+    frameworkStorage(path = '') {
+        if (path[0] === '/') path = path.substr(1);
+        return $.storagePath('framework/' + path);
     }
 };

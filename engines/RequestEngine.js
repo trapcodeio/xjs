@@ -159,17 +159,7 @@ class RequestEngine {
         return this.redirect(this.route(route, keys))
     }
 
-    /**
-     * Render View
-     * @param {string} file
-     * @param {Object} data
-     * @param {boolean} fullPath
-     * @param useEjs
-     * @returns {*}
-     */
-    view(file, data = {}, fullPath = false, useEjs = false) {
-
-        const path = file + '.' + (useEjs ? 'ejs' : $.config.template.extension);
+    viewData(file, data = {}) {
         const localsConfig = $.config.template.locals;
         const all = localsConfig.all;
 
@@ -181,10 +171,26 @@ class RequestEngine {
         if (all || localsConfig.__get) this.res.locals['__get'] = this.req.query;
         if (all || localsConfig.__post) this.res.locals['__post'] = this.req.body;
 
-        data = _.extend({}, this.fn, data);
+        return _.extend({}, this.fn, data);
+    }
+
+    /**
+     * Render View
+     * @param {string} file
+     * @param {Object} data
+     * @param {boolean} fullPath
+     * @param useEjs
+     * @returns {*}
+     */
+    view(file, data = {}, fullPath = false, useEjs = false) {
+        const Render = typeof this['customRenderer'] === 'function' ? this['customRenderer'] : this.res.render;
+
+        const path = file + '.' + (useEjs ? 'ejs' : $.config.template.extension);
+
+        data = this.viewData(file, data, fullPath, useEjs);
 
         if (typeof fullPath === "function")
-            return this.res.render(path, data, fullPath);
+            return Render(path, data, fullPath);
 
         if (useEjs === true) {
             data = Object.assign(this.res.locals, data);
@@ -194,7 +200,7 @@ class RequestEngine {
                 {filename: path}
             ));
         } else {
-            return this.res.render(file, data);
+            return Render(file, data);
         }
     }
 

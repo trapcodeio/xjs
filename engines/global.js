@@ -4,11 +4,8 @@ global["moment"] = require("moment");
 // Packages to be reused by your xjs project
 $.pkgs = {
     buildUrl: require('build-url')
+
 };
-
-
-// Use Engine
-$.use = require('./UseEngine');
 
 // Use Base64 and Object-validator-pro
 $.base64 = require('./helpers/Base64');
@@ -24,6 +21,9 @@ if ($.config.database.startOnBoot) {
 } else {
     $.db = undefined;
 }
+
+// Use Engine
+$.use = require('./UseEngine');
 
 $.bcrypt = require('bcrypt');
 $.helpers = require('./helpers.js');

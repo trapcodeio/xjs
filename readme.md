@@ -1,4 +1,4 @@
-## Xjs Framework (Beta)
+## THIS PROJECT HAS BEEN MOVED TO [**Xpresser**](https://www.npm.com/package/xpresser)
 
 A powerful framework for nodejs, Using `expressjs` as a server and also other community proven worthy libraries.
 

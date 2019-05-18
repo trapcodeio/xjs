@@ -1,6 +1,5 @@
 const fs = require('fs');
-const Router = $.app;
-const Controller = require('../ControllerEngine');
+const Controller = require('./ControllerEngine');
 const AllRoutesKey = 'RouterEngine:allRoutes';
 
 
@@ -241,8 +240,8 @@ class RouterEngine {
                 // Add To All Routes
                 ProcessedRoutes.push(route);
 
-                if (Router && (!$.isTinker && !$.isConsole)) {
-                    Router[route.method](route.path, Controller(route))
+                if ($.app && (!$.isTinker && !$.isConsole)) {
+                    $.app[route.method](route.path, Controller(route))
                 }
             }
         }
